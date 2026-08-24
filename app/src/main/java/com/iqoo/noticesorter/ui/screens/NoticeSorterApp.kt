@@ -158,11 +158,12 @@ fun NoticeSorterApp(
                                     )
                                     Spacer(modifier = Modifier.width(5.dp))
                                     Text(
-                                        text = "OriginOS 5.0 • Vision AI Engine",
+                                        text = "OriginOS · Vision AI",
                                         style = MaterialTheme.typography.labelSmall,
                                         fontWeight = FontWeight.SemiBold,
                                         color = TextSecondary,
-                                        fontSize = 11.sp
+                                        fontSize = 11.sp,
+                                        maxLines = 1
                                     )
                                 }
                             }
@@ -208,7 +209,7 @@ fun NoticeSorterApp(
                 .padding(bottom = 32.dp)
         ) {
 
-            // 1. ONLY SHOW INGESTION HUB & SELECTOR WHEN IN IDLE STATE
+            // 1. ONLY SHOW INGESTION HUB, SELECTOR & HOW IT WORKS WHEN IN IDLE STATE
             if (uiState == AppUiState.IDLE) {
                 SmartNoticeIngestionHub(
                     onUploadClick = { fileLauncher.launch("image/*") }
@@ -221,6 +222,8 @@ fun NoticeSorterApp(
                         processTarget(key)
                     }
                 )
+
+                HowItWorksSection()
             }
 
             // 2. ANIMATED TRANSITION FOR ACTIVE PROCESSING STATES
@@ -315,7 +318,7 @@ fun NoticeSorterApp(
 }
 
 /**
- * Smart Scan & Document Ingestion Hub
+ * Smart Scan & Document Ingestion Hub (Full-Width Primary Layout)
  */
 @Composable
 fun SmartNoticeIngestionHub(
@@ -324,98 +327,97 @@ fun SmartNoticeIngestionHub(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
             .shadow(
-                elevation = 6.dp,
-                shape = RoundedCornerShape(22.dp),
-                spotColor = Color(0x140F172A)
+                elevation = 8.dp,
+                shape = RoundedCornerShape(24.dp),
+                spotColor = Color(0x1A0F172A)
             ),
-        shape = RoundedCornerShape(22.dp),
+        shape = RoundedCornerShape(24.dp),
         color = SurfaceCard,
         border = BorderStroke(1.dp, BorderSubtle)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp)
+                .padding(20.dp)
         ) {
+            // Top row: icon + title (full width)
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(38.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Color(0xFFEEF2FF)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.DocumentScanner,
-                            contentDescription = null,
-                            tint = BrandIndigo,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Digitize Campus Notice",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = TextPrimary
-                        )
-                        Text(
-                            text = "Upload notice photo or screenshot",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondary
-                        )
-                    }
-                }
-
-                // Ingest CTA Button
-                Surface(
-                    color = BrandIndigo,
-                    shape = CircleShape,
+                Box(
                     modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable { onUploadClick() }
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(Color(0xFFEEF2FF)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.AddPhotoAlternate,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Select Photo",
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.DocumentScanner,
+                        contentDescription = null,
+                        tint = BrandIndigo,
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
+                Spacer(modifier = Modifier.width(14.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Digitize Campus Notice",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "Upload a photo or screenshot of any notice",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextSecondary,
+                        maxLines = 2
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // Full-width CTA button
+            Button(
+                onClick = onUploadClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = BrandIndigo),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.UploadFile,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = "Select Photo",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
             }
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // File format pill badges with horizontal scroll to prevent squishing
+            // Format badges — scrollable, never clip
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                FormatBadge("🖼️ Photos / Screenshots")
-                FormatBadge("📄 PDF Circulars")
-                FormatBadge("⚡ Auto OCR + Dates")
+                FormatBadge("🖼️  Photos / Screenshots")
+                FormatBadge("📄  PDF via Share")
+                FormatBadge("⚡  Auto OCR + Dates")
             }
         }
     }
@@ -431,18 +433,18 @@ fun FormatBadge(label: String) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.SemiBold,
             color = TextSecondary,
-            fontSize = 10.sp,
+            fontSize = 11.sp,
             maxLines = 1,
             softWrap = false,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
         )
     }
 }
 
 /**
- * Sample Notices Segmented Selector Bar
+ * Sample Notices 2x2 Grid Selector
  */
 @Composable
 fun SampleNoticeSelector(
@@ -454,32 +456,53 @@ fun SampleNoticeSelector(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)
     ) {
+        Text(
+            text = "TRY WITH SAMPLE NOTICES",
+            style = MaterialTheme.typography.labelSmall,
+            color = TextMuted,
+            fontWeight = FontWeight.ExtraBold,
+            letterSpacing = 0.8.sp,
+            modifier = Modifier.padding(start = 4.dp, bottom = 10.dp)
+        )
+
+        // Row 1
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(
-                text = "TRY WITH SAMPLE NOTICES",
-                style = MaterialTheme.typography.labelSmall,
-                color = TextMuted,
-                fontWeight = FontWeight.ExtraBold,
-                letterSpacing = 0.5.sp
+            SampleChip(
+                label = "📝  Exam",
+                isSelected = selectedKey == "exam",
+                modifier = Modifier.weight(1f),
+                onClick = { onSelect("exam") }
+            )
+            SampleChip(
+                label = "💰  Fee Dues",
+                isSelected = selectedKey == "fee",
+                modifier = Modifier.weight(1f),
+                onClick = { onSelect("fee") }
             )
         }
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
+        // Row 2
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            SampleChip("📝 Exam", isSelected = selectedKey == "exam") { onSelect("exam") }
-            SampleChip("💰 Fee Dues", isSelected = selectedKey == "fee") { onSelect("fee") }
-            SampleChip("🚀 Event", isSelected = selectedKey == "event") { onSelect("event") }
-            SampleChip("⚠️ Blurry", isSelected = selectedKey == "low") { onSelect("low") }
+            SampleChip(
+                label = "🚀  Event",
+                isSelected = selectedKey == "event",
+                modifier = Modifier.weight(1f),
+                onClick = { onSelect("event") }
+            )
+            SampleChip(
+                label = "⚠️  Blurry",
+                isSelected = selectedKey == "low",
+                modifier = Modifier.weight(1f),
+                onClick = { onSelect("low") }
+            )
         }
     }
 }
@@ -488,24 +511,139 @@ fun SampleNoticeSelector(
 fun SampleChip(
     label: String,
     isSelected: Boolean,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Surface(
         color = if (isSelected) BrandIndigo else SurfaceCard,
         contentColor = if (isSelected) Color.White else TextPrimary,
-        shape = CircleShape,
-        border = BorderStroke(1.dp, if (isSelected) BrandIndigo else BorderSubtle),
-        shadowElevation = if (isSelected) 3.dp else 0.dp,
-        modifier = Modifier
-            .clip(CircleShape)
+        shape = RoundedCornerShape(14.dp),
+        border = BorderStroke(
+            1.5.dp,
+            if (isSelected) BrandIndigo else BorderSubtle
+        ),
+        shadowElevation = if (isSelected) 4.dp else 0.dp,
+        modifier = modifier
+            .height(48.dp)
+            .clip(RoundedCornerShape(14.dp))
             .clickable { onClick() }
     ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+                maxLines = 1
+            )
+        }
+    }
+}
+
+/**
+ * High-End "How It Works" Section
+ */
+@Composable
+fun HowItWorksSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 20.dp)
+    ) {
         Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp)
+            text = "HOW IT WORKS",
+            style = MaterialTheme.typography.labelSmall,
+            color = TextMuted,
+            fontWeight = FontWeight.ExtraBold,
+            letterSpacing = 0.8.sp,
+            modifier = Modifier.padding(start = 4.dp, bottom = 12.dp)
         )
+
+        Surface(
+            shape = RoundedCornerShape(20.dp),
+            color = SurfaceCard,
+            border = BorderStroke(1.dp, BorderSubtle),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                HowItWorksStep(
+                    number = "1",
+                    title = "Share or Upload",
+                    subtitle = "Forward any notice from WhatsApp",
+                    color = BrandIndigo
+                )
+                HorizontalDivider(
+                    color = BorderSubtle,
+                    modifier = Modifier.padding(start = 52.dp)
+                )
+                HowItWorksStep(
+                    number = "2",
+                    title = "AI Extracts Details",
+                    subtitle = "Date, time, type & action needed",
+                    color = Color(0xFF8B5CF6)
+                )
+                HorizontalDivider(
+                    color = BorderSubtle,
+                    modifier = Modifier.padding(start = 52.dp)
+                )
+                HowItWorksStep(
+                    number = "3",
+                    title = "Add to Calendar",
+                    subtitle = "One tap with automatic reminder",
+                    color = FeeEmerald,
+                    showDivider = false
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun HowItWorksStep(
+    number: String,
+    title: String,
+    subtitle: String,
+    color: Color,
+    showDivider: Boolean = true
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(color.copy(alpha = 0.12f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = number,
+                fontWeight = FontWeight.ExtraBold,
+                color = color,
+                fontSize = 15.sp
+            )
+        }
+        Spacer(modifier = Modifier.width(14.dp))
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary
+            )
+        }
     }
 }
 
