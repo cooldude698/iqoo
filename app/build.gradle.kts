@@ -8,10 +8,10 @@ plugins {
 }
 
 android {
-    namespace = "com.example.noticesorter"
+    namespace = "com.iqoo.noticesorter"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.example.noticesorter"
+        applicationId = "com.iqoo.noticesorter"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
