@@ -1,76 +1,99 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.iqoo.noticesorter"
+    namespace = "com.example.noticesorter"
     compileSdk = 34
-
     defaultConfig {
-        applicationId = "com.iqoo.noticesorter"
+        applicationId = "com.example.noticesorter"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
+        
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(FileInputStream(localPropertiesFile))
         }
+        val apiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "\"\""
+        buildConfigField("String", "GEMINI_API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
-        compose = true
+      compose = true
+      aidl = false
+      buildConfig = true
+      shaders = false
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
+
     packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+      resources {
+        excludes += "/META-INF/{AL2.0,LGPL2.1}"
+      }
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2024.02.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended")
+  val composeBom = platform(libs.androidx.compose.bom)
+  implementation(composeBom)
+  androidTestImplementation(composeBom)
 
-    // ML Kit OCR
-    implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.0")
+  // Core Android dependencies
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation(libs.androidx.activity.compose)
 
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+  // Arch Components
+  implementation(libs.androidx.lifecycle.runtime.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+  // Compose
+  implementation(libs.androidx.compose.ui)
+  implementation(libs.androidx.compose.ui.tooling.preview)
+  implementation(libs.androidx.compose.material3)
+  implementation("androidx.compose.material:material-icons-extended")
+  // Tooling
+  debugImplementation(libs.androidx.compose.ui.tooling)
+  // Instrumented tests
+  androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+  debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+  // Local tests: jUnit, coroutines, Android runner
+  testImplementation(libs.junit)
+  testImplementation(libs.kotlinx.coroutines.test)
+
+  // Instrumented tests: jUnit rules and runners
+  androidTestImplementation(libs.androidx.test.core)
+  androidTestImplementation(libs.androidx.test.ext.junit)
+  androidTestImplementation(libs.androidx.test.runner)
+  androidTestImplementation(libs.androidx.test.espresso.core)
+
+  // Navigation removed for simplicity
+
+  // OCR and LLM
+  implementation(libs.mlkit.text.recognition)
+  implementation(libs.generativeai)
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.0")
 }
