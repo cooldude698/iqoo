@@ -25,12 +25,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Share Sheet Target for Images and PDFs from WhatsApp / Gallery / Files -->
+            <!-- Share Sheet Target for Single Image/PDF from WhatsApp / Gallery / Files -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
                 <data android:mimeType="application/pdf" />
+            </intent-filter>
+
+            <!-- Share Sheet Target for Multiple Images (ACTION_SEND_MULTIPLE) -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
 

@@ -8,10 +8,10 @@ plugins {
 }
 
 android {
-    namespace = "com.example.noticesorter"
+    namespace = "com.iqoo.noticesorter"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.example.noticesorter"
+        applicationId = "com.iqoo.noticesorter"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -22,7 +22,7 @@ android {
         if (localPropertiesFile.exists()) {
             localProperties.load(FileInputStream(localPropertiesFile))
         }
-        val apiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "\"\""
+        val apiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
         buildConfigField("String", "GEMINI_API_KEY", "\"$apiKey\"")
     }
 
@@ -47,6 +47,12 @@ android {
       resources {
         excludes += "/META-INF/{AL2.0,LGPL2.1}"
       }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 

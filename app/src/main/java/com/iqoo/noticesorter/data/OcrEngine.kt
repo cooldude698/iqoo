@@ -1,4 +1,4 @@
-package com.example.noticesorter.domain
+package com.iqoo.noticesorter.data
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -17,6 +17,10 @@ import java.io.File
 import java.io.FileOutputStream
 import kotlin.math.max
 
+/**
+ * On-Device OCR Engine using Google ML Kit Text Recognition.
+ * Supports image files and PDF document rendering.
+ */
 class OcrEngine {
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
@@ -113,7 +117,7 @@ class OcrEngine {
                     input.copyTo(output)
                 }
             }
-            
+
             val fd = ParcelFileDescriptor.open(tempFile, ParcelFileDescriptor.MODE_READ_ONLY)
             val renderer = try {
                 PdfRenderer(fd)
