@@ -1,7 +1,11 @@
 package com.iqoo.noticesorter.ui.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -41,11 +45,21 @@ fun NoticeSorterApp(
     var uiState by remember { mutableStateOf(AppUiState.LOADING) }
     var currentNotice by remember { mutableStateOf<NoticeData?>(null) }
     var mockSelection by remember { mutableStateOf("exam") }
+    var pickedImageUri by remember { mutableStateOf<String?>(null) }
 
-    // Launch notice processing when URI or mock changes
-    LaunchedEffect(sharedImageUri, mockSelection) {
+    // Launcher for Prit's image upload picker
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            pickedImageUri = it.toString()
+        }
+    }
+
+    // Launch notice processing when shared URI, picked URI, or mock changes
+    LaunchedEffect(sharedImageUri, pickedImageUri, mockSelection) {
         uiState = AppUiState.LOADING
-        val uriToProcess = sharedImageUri ?: mockSelection
+        val uriToProcess = sharedImageUri ?: pickedImageUri ?: mockSelection
         currentNotice = processor.processNotice(uriToProcess, context)
         uiState = AppUiState.RESULT_CARD
     }
@@ -129,11 +143,18 @@ fun NoticeSorterApp(
                 .background(PaletteCream)
         ) {
 
-            // Demo notice selector bar (shown when opened directly without share intent)
+            // Prit's "Digitize Your Notice" Upload Card & Sample Chips
             if (sharedImageUri == null) {
+                PritDigitizeUploadCard(
+                    onUploadClick = { galleryLauncher.launch("image/*") }
+                )
+
                 DemoNoticeSelectorBar(
                     selectedKey = mockSelection,
-                    onSelect = { key -> mockSelection = key }
+                    onSelect = { key ->
+                        pickedImageUri = null
+                        mockSelection = key
+                    }
                 )
             }
 
@@ -148,7 +169,7 @@ fun NoticeSorterApp(
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(vertical = 8.dp),
+                                    .padding(vertical = 4.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 NoticeCard(
@@ -178,6 +199,66 @@ fun NoticeSorterApp(
     }
 }
 
+/**
+ * Prit's "Digitize Your Notice" Card — Upload photo or PDF from gallery/files
+ */
+@Composable
+fun PritDigitizeUploadCard(
+    onUploadClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { onUploadClick() },
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFE8EEF5)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AddPhotoAlternate,
+                        contentDescription = "Upload Notice",
+                        tint = PaletteSlateBlue,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = "Digitize Your Notice (Prit's OCR)",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = PaletteDarkText
+                    )
+                    Text(
+                        text = "Tap to upload notice photo or PDF from gallery",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = PaletteSubtext
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun DemoNoticeSelectorBar(
     selectedKey: String,
@@ -188,14 +269,14 @@ fun DemoNoticeSelectorBar(
         shadowElevation = 2.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Text(
-                text = "HACKATHON DEMO SAMPLES",
+                text = "OR PREVIEW DEMO NOTICES",
                 style = MaterialTheme.typography.labelSmall,
                 color = PaletteSlateBlue,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
