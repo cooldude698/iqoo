@@ -10,6 +10,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -39,8 +40,10 @@ import com.iqoo.noticesorter.ui.components.CalendarLauncher
 import com.iqoo.noticesorter.ui.components.NoticeCard
 import com.iqoo.noticesorter.ui.theme.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 enum class AppUiState {
+    IDLE,
     LOADING,
     RESULT_CARD,
     CONFIRMED,
@@ -55,13 +58,36 @@ fun NoticeSorterApp(
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+    val coroutineScope = rememberCoroutineScope()
 
-    var uiState by rememberSaveable { mutableStateOf(AppUiState.LOADING) }
+    // Start in IDLE if opened normally, or LOADING if opened via share intent
+    var uiState by rememberSaveable { 
+        mutableStateOf(if (sharedImageUri != null) AppUiState.LOADING else AppUiState.IDLE) 
+    }
     var currentNotice by remember { mutableStateOf<NoticeData?>(null) }
-    var mockSelection by rememberSaveable { mutableStateOf("exam") }
-    var pickedImageUri by rememberSaveable { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf("") }
-    var retryTrigger by remember { mutableIntStateOf(0) }
+    var lastProcessedTarget by remember { mutableStateOf<String?>(null) }
+
+    // Helper function to process notices cleanly
+    fun processTarget(uriOrMock: String) {
+        lastProcessedTarget = uriOrMock
+        uiState = AppUiState.LOADING
+        errorMessage = ""
+        coroutineScope.launch {
+            try {
+                currentNotice = processor.processNotice(uriOrMock, context)
+                uiState = AppUiState.RESULT_CARD
+            } catch (e: Exception) {
+                errorMessage = e.message ?: "Failed to process notice."
+                uiState = AppUiState.ERROR
+            }
+        }
+    }
+
+    // Process shared intent automatically if it exists on launch
+    LaunchedEffect(sharedImageUri) {
+        sharedImageUri?.let { processTarget(it) }
+    }
 
     // Launcher for file picker (Images)
     val fileLauncher = rememberLauncherForActivityResult(
@@ -69,22 +95,7 @@ fun NoticeSorterApp(
     ) { uri: Uri? ->
         uri?.let {
             haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
-            pickedImageUri = it.toString()
-        }
-    }
-
-    // Launch notice processing when shared URI, picked URI, or mock changes
-    LaunchedEffect(sharedImageUri, pickedImageUri, mockSelection, retryTrigger) {
-        uiState = AppUiState.LOADING
-        errorMessage = ""
-        val uriToProcess = sharedImageUri ?: pickedImageUri ?: mockSelection
-        try {
-            val result = processor.processNotice(uriToProcess, context)
-            currentNotice = result
-            uiState = AppUiState.RESULT_CARD
-        } catch (e: Exception) {
-            errorMessage = e.message ?: "Could not process notice document. Please try again."
-            uiState = AppUiState.ERROR
+            processTarget(it.toString())
         }
     }
 
@@ -193,24 +204,26 @@ fun NoticeSorterApp(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(CanvasBackground)
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 32.dp)
         ) {
 
-            // Smart Ingestion Hub & Presets (Visible when no external intent)
-            if (sharedImageUri == null) {
+            // 1. ONLY SHOW INGESTION HUB & SELECTOR WHEN IN IDLE STATE
+            if (uiState == AppUiState.IDLE) {
                 SmartNoticeIngestionHub(
                     onUploadClick = { fileLauncher.launch("image/*") }
                 )
 
                 SampleNoticeSelector(
-                    selectedKey = mockSelection,
+                    selectedKey = "",
                     onSelect = { key ->
                         haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
-                        pickedImageUri = null
-                        mockSelection = key
+                        processTarget(key)
                     }
                 )
             }
 
+            // 2. ANIMATED TRANSITION FOR ACTIVE PROCESSING STATES
             AnimatedContent(
                 targetState = uiState,
                 transitionSpec = {
@@ -222,14 +235,14 @@ fun NoticeSorterApp(
                 label = "ScreenTransition"
             ) { targetState ->
                 when (targetState) {
+                    AppUiState.IDLE -> { /* Clean IDLE state handled above */ }
                     AppUiState.LOADING -> ModernLoadingScreen()
                     AppUiState.RESULT_CARD -> {
                         currentNotice?.let { notice ->
                             Column(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(vertical = 4.dp)
-                                    .verticalScroll(rememberScrollState()),
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 NoticeCard(
@@ -242,7 +255,32 @@ fun NoticeSorterApp(
                                         }
                                     }
                                 )
-                                Spacer(modifier = Modifier.height(32.dp))
+
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                // Secondary Action to discard & return to Hub
+                                TextButton(
+                                    onClick = { 
+                                        if (sharedImageUri != null) {
+                                            (context as? Activity)?.finish()
+                                        } else {
+                                            uiState = AppUiState.IDLE 
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = null,
+                                        tint = TextSecondary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = if (sharedImageUri != null) "Close & Return" else "Cancel & Scan Another",
+                                        color = TextSecondary,
+                                        style = MaterialTheme.typography.labelLarge
+                                    )
+                                }
                             }
                         }
                     }
@@ -253,12 +291,10 @@ fun NoticeSorterApp(
                                 onReset = { uiState = AppUiState.RESULT_CARD },
                                 onShareAnother = {
                                     currentNotice = null
-                                    pickedImageUri = null
                                     if (sharedImageUri != null) {
                                         (context as? Activity)?.finish()
                                     } else {
-                                        mockSelection = "exam"
-                                        uiState = AppUiState.LOADING
+                                        uiState = AppUiState.IDLE
                                     }
                                 }
                             )
@@ -267,7 +303,9 @@ fun NoticeSorterApp(
                     AppUiState.ERROR -> {
                         ErrorScreen(
                             errorMessage = errorMessage,
-                            onRetry = { retryTrigger++ }
+                            onRetry = {
+                                lastProcessedTarget?.let { processTarget(it) } ?: run { uiState = AppUiState.IDLE }
+                            }
                         )
                     }
                 }
@@ -368,13 +406,15 @@ fun SmartNoticeIngestionHub(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // File format pill badges
+            // File format pill badges with horizontal scroll to prevent squishing
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 FormatBadge("🖼️ Photos / Screenshots")
-                FormatBadge("📄 PDF Circulars (Via Share)")
+                FormatBadge("📄 PDF Circulars")
                 FormatBadge("⚡ Auto OCR + Dates")
             }
         }
@@ -394,6 +434,8 @@ fun FormatBadge(label: String) {
             fontWeight = FontWeight.Medium,
             color = TextSecondary,
             fontSize = 10.sp,
+            maxLines = 1,
+            softWrap = false,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
         )
     }
@@ -429,7 +471,9 @@ fun SampleNoticeSelector(
         Spacer(modifier = Modifier.height(6.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SampleChip("📝 Exam", isSelected = selectedKey == "exam") { onSelect("exam") }
@@ -724,7 +768,7 @@ fun ConfirmationScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Share Another Notice",
+                            text = "Scan / Share Another Notice",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = BrandIndigo
@@ -829,5 +873,6 @@ fun ErrorScreen(
         }
     }
 }
+
 
 
