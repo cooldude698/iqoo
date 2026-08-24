@@ -211,14 +211,14 @@ fun PritDigitizeUploadCard(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable { onUploadClick() },
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -228,28 +228,28 @@ fun PritDigitizeUploadCard(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(46.dp)
                         .clip(CircleShape)
                         .background(Color(0xFFE8EEF5)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.AddPhotoAlternate,
-                        contentDescription = "Upload Notice",
+                        imageVector = Icons.Default.CloudUpload,
+                        contentDescription = "Upload or Drag Notice",
                         tint = PaletteSlateBlue,
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(26.dp)
                     )
                 }
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(14.dp))
                 Column {
                     Text(
                         text = "Digitize Your Notice (Prit's OCR)",
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = PaletteDarkText
                     )
                     Text(
-                        text = "Tap to upload notice photo or PDF from gallery",
+                        text = "Tap to upload or drag & drop notice photo / PDF",
                         style = MaterialTheme.typography.bodySmall,
                         color = PaletteSubtext
                     )
