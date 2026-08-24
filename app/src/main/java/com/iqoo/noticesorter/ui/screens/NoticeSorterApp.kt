@@ -116,6 +116,7 @@ fun NoticeSorterApp(
                                 colors = listOf(Color(0xFFFFFFFF), Color(0xFFF8FAFC))
                             )
                         )
+                        .statusBarsPadding()
                         .padding(horizontal = 20.dp, vertical = 14.dp)
                 ) {
                     Row(
@@ -408,38 +409,54 @@ fun SmartNoticeIngestionHub(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Format badges — scrollable, never clip
+            // Format badges — perfectly proportioned full width
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                FormatBadge("🖼️  Photos / Screenshots")
-                FormatBadge("📄  PDF via Share")
-                FormatBadge("⚡  Auto OCR + Dates")
+                FormatBadge(
+                    label = "🖼️ Photos",
+                    modifier = Modifier.weight(1f)
+                )
+                FormatBadge(
+                    label = "📄 PDF Files",
+                    modifier = Modifier.weight(1f)
+                )
+                FormatBadge(
+                    label = "⚡ Auto OCR",
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
 }
 
 @Composable
-fun FormatBadge(label: String) {
+fun FormatBadge(
+    label: String,
+    modifier: Modifier = Modifier
+) {
     Surface(
         color = SurfaceCardSecondary,
         shape = CircleShape,
-        border = BorderStroke(1.dp, BorderSubtle)
+        border = BorderStroke(1.dp, BorderSubtle),
+        modifier = modifier
     ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = TextSecondary,
-            fontSize = 11.sp,
-            maxLines = 1,
-            softWrap = false,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp)
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = TextSecondary,
+                fontSize = 11.sp,
+                maxLines = 1,
+                softWrap = false,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
