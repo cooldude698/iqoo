@@ -3,6 +3,7 @@ package com.iqoo.noticesorter.ui.components
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
@@ -531,6 +532,36 @@ fun NoticeCard(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // 6. WhatsApp Group Forwarder One-Tap Summary Button
+            OutlinedButton(
+                onClick = {
+                    haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                    shareSummaryToWhatsApp(context, notice)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.5.dp, BrandIndigo),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = BrandIndigo)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Share,
+                    contentDescription = null,
+                    tint = BrandIndigo,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Forward Summary to Class Group",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = BrandIndigo
+                )
+            }
         }
     }
 
@@ -600,4 +631,34 @@ private fun calculateRelativeDate(dateStr: String?): String? {
         null
     }
 }
+
+/**
+ * Creates clean bullet summary and forwards directly to WhatsApp or native share sheet
+ */
+fun shareSummaryToWhatsApp(context: Context, notice: NoticeData) {
+    val summaryText = """
+        📌 *${notice.title.uppercase()}*
+        📅 *Date:* ${notice.date ?: "TBD"}
+        ⏰ *Time:* ${notice.time ?: "All Day"}
+        🏷️ *Type:* ${notice.type.uppercase()}
+        ⚡ *Action Needed:* ${notice.actionNeeded}
+        
+        _Processed via Notice Sorter AI (OriginOS)_
+    """.trimIndent()
+
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, summaryText)
+        setPackage("com.whatsapp")
+    }
+
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        // Fallback to standard share sheet if WhatsApp isn't direct target
+        val chooser = Intent.createChooser(intent.apply { setPackage(null) }, "Share Notice Summary")
+        context.startActivity(chooser)
+    }
+}
+
 
