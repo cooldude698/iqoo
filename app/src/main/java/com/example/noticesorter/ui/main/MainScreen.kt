@@ -242,19 +242,21 @@ fun NoticeResultCard(data: NoticeData) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Icon(
-                        Icons.Default.Event, 
-                        contentDescription = "Date", 
-                        tint = MaterialTheme.colorScheme.primary, 
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(
-                        text = data.date, 
-                        style = MaterialTheme.typography.bodyLarge, 
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                if (data.date != null && data.date.isNotBlank()) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Icon(
+                            Icons.Default.Event, 
+                            contentDescription = "Date", 
+                            tint = MaterialTheme.colorScheme.primary, 
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = data.date, 
+                            style = MaterialTheme.typography.bodyLarge, 
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
                 
                 if (data.time != null && data.time.isNotBlank()) {
@@ -276,7 +278,7 @@ fun NoticeResultCard(data: NoticeData) {
             }
 
             // Action Items
-            if (data.action_needed.isNotBlank()) {
+            if (data.actionNeeded.isNotBlank()) {
                 Surface(
                     color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
                     shape = RoundedCornerShape(16.dp),
@@ -301,7 +303,7 @@ fun NoticeResultCard(data: NoticeData) {
                             )
                         }
                         Text(
-                            text = data.action_needed,
+                            text = data.actionNeeded,
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.2
