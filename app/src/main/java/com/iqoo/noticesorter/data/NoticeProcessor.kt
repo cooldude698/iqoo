@@ -59,7 +59,7 @@ class MockNoticeProcessor : NoticeProcessor {
                 date = "2026-09-05",
                 time = "17:00",
                 type = "fee",
-                action_needed = "Pay semester tuition fee of Rs 45,000 on student portal before 5 PM to avoid fine.",
+                actionNeeded = "Pay semester tuition fee of Rs 45,000 on student portal before 5 PM to avoid fine.",
                 confidence = "high"
             )
             imageUri.contains("event", ignoreCase = true) -> NoticeData(
@@ -67,7 +67,7 @@ class MockNoticeProcessor : NoticeProcessor {
                 date = "2026-08-30",
                 time = "10:00",
                 type = "event",
-                action_needed = "Register team of 3 on college portal for 24-hour hackathon track.",
+                actionNeeded = "Register team of 3 on college portal for 24-hour hackathon track.",
                 confidence = "high"
             )
             imageUri.contains("low", ignoreCase = true) -> NoticeData(
@@ -75,7 +75,7 @@ class MockNoticeProcessor : NoticeProcessor {
                 date = "",
                 time = null,
                 type = "exam",
-                action_needed = "Check department notice board for revised slot allocation.",
+                actionNeeded = "Check department notice board for revised slot allocation.",
                 confidence = "low"
             )
             else -> NoticeData(
@@ -83,7 +83,7 @@ class MockNoticeProcessor : NoticeProcessor {
                 date = "2026-09-12",
                 time = "09:30",
                 type = "exam",
-                action_needed = "Submit hall ticket form & bring valid college ID to Exam Hall 3.",
+                actionNeeded = "Submit hall ticket form & bring valid college ID to Exam Hall 3.",
                 confidence = "high"
             )
         }

@@ -307,7 +307,7 @@ fun NoticeCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = notice.action_needed.ifBlank { "No action specified. Tap to add details." },
+                    text = notice.actionNeeded.ifBlank { "No action specified. Tap to add details." },
                     style = MaterialTheme.typography.bodyMedium,
                     color = PaletteDarkText,
                     modifier = Modifier.weight(1f)
@@ -361,9 +361,9 @@ fun NoticeCard(
     }
     if (showEditAction) {
         EditActionDialog(
-            currentAction = notice.action_needed,
+            currentAction = notice.actionNeeded,
             onDismiss = { showEditAction = false },
-            onConfirm = { updatedAction -> onNoticeUpdated(notice.copy(action_needed = updatedAction)) }
+            onConfirm = { updatedAction -> onNoticeUpdated(notice.copy(actionNeeded = updatedAction)) }
         )
     }
     if (showEditType) {

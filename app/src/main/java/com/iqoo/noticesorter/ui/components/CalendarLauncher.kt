@@ -24,7 +24,7 @@ object CalendarLauncher {
                 putExtra(CalendarContract.Events.TITLE, notice.title)
                 putExtra(
                     CalendarContract.Events.DESCRIPTION,
-                    "Action Required: ${notice.action_needed}\n\nNotice Type: ${notice.type.uppercase()}"
+                    "Action Required: ${notice.actionNeeded}\n\nNotice Type: ${notice.type.uppercase()}"
                 )
                 putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTimeMillis)
                 putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTimeMillis)
