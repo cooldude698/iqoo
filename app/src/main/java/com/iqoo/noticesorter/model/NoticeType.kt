@@ -1,6 +1,7 @@
 package com.iqoo.noticesorter.model
 
 import androidx.compose.ui.graphics.Color
+import com.iqoo.noticesorter.ui.theme.*
 
 enum class NoticeType(
     val label: String,
@@ -8,29 +9,29 @@ enum class NoticeType(
     val contentColor: Color
 ) {
     EXAM(
-        label = "Exam",
-        containerColor = Color(0xFFFFEBEE), // Coral red tint
-        contentColor = Color(0xFFC62828)
+        label = "Exam & Tests",
+        containerColor = Color(0xFFE8EEF5), // Soft Slate Blue tint
+        contentColor = PaletteSlateBlue
     ),
     FEE(
         label = "Fee Deadline",
-        containerColor = Color(0xFFFFF3E0), // Amber tint
-        contentColor = Color(0xFFE65100)
+        containerColor = Color(0xFFF3EFDF), // Warm Cream tint
+        contentColor = Color(0xFF7A6B3B)
     ),
     EVENT(
         label = "College Event",
-        containerColor = Color(0xFFEDE7F6), // Indigo / Purple tint
-        contentColor = Color(0xFF4527A0)
+        containerColor = Color(0xFFEFF4EC), // Soft Sage Green tint
+        contentColor = PaletteMossGreen
     ),
     CIRCULAR(
         label = "Official Circular",
-        containerColor = Color(0xFFE0F2F1), // Teal tint
-        contentColor = Color(0xFF00695C)
+        containerColor = Color(0xFFEAF0F6), // Soft Steel tint
+        contentColor = PaletteSlateBlue
     ),
     OTHER(
         label = "General Notice",
-        containerColor = Color(0xFFECEFF1), // Slate tint
-        contentColor = Color(0xFF37474F)
+        containerColor = Color(0xFFF0F4F2), // Muted Moss tint
+        contentColor = PaletteDarkText
     );
 
     companion object {

@@ -1,19 +1,34 @@
 package com.iqoo.noticesorter.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xD0D0BCFF)
-val PurpleGrey80 = Color(0xD0CCC2DC)
-val Pink80 = Color(0xD0EFB8C8)
+// Palette from User Design Swatches (Dopely Colors)
+val PaletteSlateBlue = Color(0xFF5E7892)
+val PaletteSoftSteel = Color(0xFFA7B7C6)
+val PaletteCream = Color(0xFFF3EFDF)
+val PaletteSageGreen = Color(0xFFBDCFAA)
+val PaletteMossGreen = Color(0xFF8E9E83)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Text & Surface Neutral Tones
+val PaletteDarkText = Color(0xFF2C3743)
+val PaletteSubtext = Color(0xFF5C6B73)
+val PaletteCardBackground = Color(0xFFFFFFFF)
+val PaletteCardBorder = Color(0xFFE2E7EC)
 
-// Brand & Accent Colors
-val IQOOYellow = Color(0xFFFFB800)
-val IQOODarkHeader = Color(0xFF1E1E24)
-val SurfaceBackground = Color(0xFFF8F9FA)
-val CardBorderColor = Color(0xFFE2E8F0)
-val WarningBannerColor = Color(0xFFFFF4E5)
-val WarningTextColor = Color(0xFFB76E00)
+// Gradients matching the palette swatches
+val PositivePrimaryGradient = Brush.horizontalGradient(
+    colors = listOf(PaletteSlateBlue, PaletteMossGreen)
+)
+
+val PositiveSageGradient = Brush.horizontalGradient(
+    colors = listOf(PaletteSageGreen, PaletteMossGreen)
+)
+
+val PositiveSoftGradient = Brush.verticalGradient(
+    colors = listOf(PaletteCream, Color(0xFFFFFFFF))
+)
+
+val PositiveButtonGradient = Brush.horizontalGradient(
+    colors = listOf(PaletteSlateBlue, PaletteSoftSteel)
+)
