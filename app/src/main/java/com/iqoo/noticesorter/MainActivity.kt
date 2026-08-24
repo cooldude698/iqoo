@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.content.IntentCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.iqoo.noticesorter.data.RealNoticeProcessor
 import com.iqoo.noticesorter.ui.screens.NoticeSorterApp
 import com.iqoo.noticesorter.ui.screens.SplashScreen
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
     private val processor by lazy { RealNoticeProcessor() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
