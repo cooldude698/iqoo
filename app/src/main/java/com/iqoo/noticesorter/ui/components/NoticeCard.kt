@@ -209,10 +209,10 @@ fun NoticeCard(
                             color = PaletteSubtext
                         )
                         Text(
-                            text = if (notice.date.isNotBlank()) notice.date else "Tap to set date",
+                            text = if (!notice.date.isNullOrBlank()) notice.date else "Tap to set date",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
-                            color = if (notice.date.isNotBlank()) PaletteDarkText else Color(0xFFB76E00)
+                            color = if (!notice.date.isNullOrBlank()) PaletteDarkText else Color(0xFFB76E00)
                         )
                     }
                 }
@@ -375,7 +375,7 @@ fun NoticeCard(
     }
     if (showEditDate) {
         EditDateDialog(
-            currentDate = notice.date,
+            currentDate = notice.date ?: "",
             onDismiss = { showEditDate = false },
             onConfirm = { updatedDate ->
                 onNoticeUpdated(

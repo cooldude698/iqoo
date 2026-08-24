@@ -43,10 +43,10 @@ object CalendarLauncher {
         }
     }
 
-    private fun parseDateTimeToMillis(dateStr: String, timeStr: String?): Long {
+    private fun parseDateTimeToMillis(dateStr: String?, timeStr: String?): Long {
         val calendar = Calendar.getInstance()
         try {
-            if (dateStr.isNotBlank()) {
+            if (!dateStr.isNullOrBlank()) {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val date = dateFormat.parse(dateStr)
                 if (date != null) {
