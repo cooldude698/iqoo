@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -479,18 +480,27 @@ fun NoticeCard(
             Spacer(modifier = Modifier.height(24.dp))
 
             // 5. Primary Glowing "Add to Calendar" CTA
+            val hasValidDate = !notice.date.isNullOrBlank()
             Surface(
                 shape = RoundedCornerShape(18.dp),
                 color = Color.Transparent,
-                shadowElevation = 6.dp,
+                shadowElevation = if (hasValidDate) 6.dp else 2.dp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
                     .clip(RoundedCornerShape(18.dp))
-                    .background(ActionButtonGradient)
+                    .background(
+                        if (hasValidDate) ActionButtonGradient
+                        else Brush.linearGradient(listOf(Color(0xFF94A3B8), Color(0xFF64748B)))
+                    )
                     .clickable {
                         haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
-                        onAddToCalendar()
+                        if (hasValidDate) {
+                            onAddToCalendar()
+                        } else {
+                            Toast.makeText(context, "Please set an event date first", Toast.LENGTH_SHORT).show()
+                            showEditDate = true
+                        }
                     }
             ) {
                 Row(
@@ -499,7 +509,7 @@ fun NoticeCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Default.EventAvailable,
+                        imageVector = if (hasValidDate) Icons.Default.EventAvailable else Icons.Default.EditCalendar,
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier.size(22.dp)
@@ -507,15 +517,15 @@ fun NoticeCard(
                     Spacer(modifier = Modifier.width(10.dp))
                     Column(horizontalAlignment = Alignment.Start) {
                         Text(
-                            text = "Add to Phone Calendar",
+                            text = if (hasValidDate) "Add to Phone Calendar" else "Set Date to Add Event",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                         Text(
-                            text = "Syncs event & enables 24-hr reminder alert",
+                            text = if (hasValidDate) "Syncs event & enables 24-hr reminder alert" else "Tap here to pick or confirm notice date",
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color(0xFFE0E7FF),
+                            color = Color(0xFFE2E8F0),
                             fontSize = 10.sp
                         )
                     }

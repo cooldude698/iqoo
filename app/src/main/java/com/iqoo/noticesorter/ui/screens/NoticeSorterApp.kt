@@ -1,5 +1,6 @@
 package com.iqoo.noticesorter.ui.screens
 
+import android.app.Activity
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,13 +11,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,11 +38,13 @@ import com.iqoo.noticesorter.model.NoticeData
 import com.iqoo.noticesorter.ui.components.CalendarLauncher
 import com.iqoo.noticesorter.ui.components.NoticeCard
 import com.iqoo.noticesorter.ui.theme.*
+import kotlinx.coroutines.delay
 
 enum class AppUiState {
     LOADING,
     RESULT_CARD,
-    CONFIRMED
+    CONFIRMED,
+    ERROR
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,12 +56,14 @@ fun NoticeSorterApp(
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
-    var uiState by remember { mutableStateOf(AppUiState.LOADING) }
+    var uiState by rememberSaveable { mutableStateOf(AppUiState.LOADING) }
     var currentNotice by remember { mutableStateOf<NoticeData?>(null) }
-    var mockSelection by remember { mutableStateOf("exam") }
-    var pickedImageUri by remember { mutableStateOf<String?>(null) }
+    var mockSelection by rememberSaveable { mutableStateOf("exam") }
+    var pickedImageUri by rememberSaveable { mutableStateOf<String?>(null) }
+    var errorMessage by remember { mutableStateOf("") }
+    var retryTrigger by remember { mutableIntStateOf(0) }
 
-    // Launcher for file picker (Images & PDFs)
+    // Launcher for file picker (Images)
     val fileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -66,11 +74,18 @@ fun NoticeSorterApp(
     }
 
     // Launch notice processing when shared URI, picked URI, or mock changes
-    LaunchedEffect(sharedImageUri, pickedImageUri, mockSelection) {
+    LaunchedEffect(sharedImageUri, pickedImageUri, mockSelection, retryTrigger) {
         uiState = AppUiState.LOADING
+        errorMessage = ""
         val uriToProcess = sharedImageUri ?: pickedImageUri ?: mockSelection
-        currentNotice = processor.processNotice(uriToProcess, context)
-        uiState = AppUiState.RESULT_CARD
+        try {
+            val result = processor.processNotice(uriToProcess, context)
+            currentNotice = result
+            uiState = AppUiState.RESULT_CARD
+        } catch (e: Exception) {
+            errorMessage = e.message ?: "Could not process notice document. Please try again."
+            uiState = AppUiState.ERROR
+        }
     }
 
     Scaffold(
@@ -183,7 +198,7 @@ fun NoticeSorterApp(
             // Smart Ingestion Hub & Presets (Visible when no external intent)
             if (sharedImageUri == null) {
                 SmartNoticeIngestionHub(
-                    onUploadClick = { fileLauncher.launch("*/*") }
+                    onUploadClick = { fileLauncher.launch("image/*") }
                 )
 
                 SampleNoticeSelector(
@@ -198,6 +213,12 @@ fun NoticeSorterApp(
 
             AnimatedContent(
                 targetState = uiState,
+                transitionSpec = {
+                    fadeIn(animationSpec = tween(350)) + slideInVertically(
+                        initialOffsetY = { it / 6 },
+                        animationSpec = tween(350, easing = FastOutSlowInEasing)
+                    ) togetherWith fadeOut(animationSpec = tween(200))
+                },
                 label = "ScreenTransition"
             ) { targetState ->
                 when (targetState) {
@@ -207,7 +228,8 @@ fun NoticeSorterApp(
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(vertical = 4.dp),
+                                    .padding(vertical = 4.dp)
+                                    .verticalScroll(rememberScrollState()),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 NoticeCard(
@@ -220,6 +242,7 @@ fun NoticeSorterApp(
                                         }
                                     }
                                 )
+                                Spacer(modifier = Modifier.height(32.dp))
                             }
                         }
                     }
@@ -227,9 +250,25 @@ fun NoticeSorterApp(
                         currentNotice?.let { notice ->
                             ConfirmationScreen(
                                 notice = notice,
-                                onReset = { uiState = AppUiState.RESULT_CARD }
+                                onReset = { uiState = AppUiState.RESULT_CARD },
+                                onShareAnother = {
+                                    currentNotice = null
+                                    pickedImageUri = null
+                                    if (sharedImageUri != null) {
+                                        (context as? Activity)?.finish()
+                                    } else {
+                                        mockSelection = "exam"
+                                        uiState = AppUiState.LOADING
+                                    }
+                                }
                             )
                         }
+                    }
+                    AppUiState.ERROR -> {
+                        ErrorScreen(
+                            errorMessage = errorMessage,
+                            onRetry = { retryTrigger++ }
+                        )
                     }
                 }
             }
@@ -291,7 +330,7 @@ fun SmartNoticeIngestionHub(
                             color = TextPrimary
                         )
                         Text(
-                            text = "Upload photo or PDF circular",
+                            text = "Upload notice photo or screenshot",
                             style = MaterialTheme.typography.bodySmall,
                             color = TextSecondary
                         )
@@ -311,14 +350,14 @@ fun SmartNoticeIngestionHub(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.UploadFile,
+                            imageVector = Icons.Default.AddPhotoAlternate,
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "Select File",
+                            text = "Select Photo",
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -335,7 +374,7 @@ fun SmartNoticeIngestionHub(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 FormatBadge("🖼️ Photos / Screenshots")
-                FormatBadge("📄 PDF Circulars")
+                FormatBadge("📄 PDF Circulars (Via Share)")
                 FormatBadge("⚡ Auto OCR + Dates")
             }
         }
@@ -427,16 +466,25 @@ fun SampleChip(
 }
 
 /**
- * Modern High-Tech Loading Screen with Animated Scanner
+ * Modern High-Tech Loading Screen with Real Sequential Step Transitions
  */
 @Composable
 fun ModernLoadingScreen() {
+    var currentStep by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        delay(600)
+        currentStep = 1
+        delay(1200)
+        currentStep = 2
+    }
+
     val infiniteTransition = rememberInfiniteTransition(label = "LoadingPulse")
     val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
+        initialValue = 0.35f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(800, easing = LinearEasing),
+            animation = tween(700, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "AlphaPulse"
@@ -484,22 +532,38 @@ fun ModernLoadingScreen() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Running on-device OCR & extracting deadlines via Gemini Vision...",
+                text = when (currentStep) {
+                    0 -> "1/3: Reading image text with Google ML Kit OCR..."
+                    1 -> "2/3: Analyzing deadlines & action items with Gemini Vision..."
+                    else -> "3/3: Validating structure & preparing calendar event..."
+                },
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextSecondary,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Step Progress Pills
+            // Step Progress Pills with sequential lighting
             Row(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                ProcessingStepPill("1. OCR Text", isComplete = true)
-                ProcessingStepPill("2. LLM Extraction", isComplete = true)
-                ProcessingStepPill("3. Calendar Payload", isComplete = false, alpha = alpha)
+                ProcessingStepPill(
+                    label = "1. OCR Text",
+                    isComplete = currentStep >= 1,
+                    alpha = if (currentStep == 0) alpha else 1f
+                )
+                ProcessingStepPill(
+                    label = "2. LLM Extraction",
+                    isComplete = currentStep >= 2,
+                    alpha = if (currentStep == 1) alpha else 1f
+                )
+                ProcessingStepPill(
+                    label = "3. Calendar Payload",
+                    isComplete = false,
+                    alpha = if (currentStep >= 2) alpha else 0.4f
+                )
             }
         }
     }
@@ -508,7 +572,7 @@ fun ModernLoadingScreen() {
 @Composable
 fun ProcessingStepPill(label: String, isComplete: Boolean, alpha: Float = 1f) {
     Surface(
-        color = if (isComplete) Color(0xFFECFDF5) else Color(0xFFEEF2FF),
+        color = if (isComplete) Color(0xFFECFDF5) else Color(0xFFEEF2FF).copy(alpha = alpha),
         shape = CircleShape,
         border = BorderStroke(1.dp, if (isComplete) Color(0xFFA7F3D0) else Color(0xFFC7D2FE)),
         modifier = Modifier.clip(CircleShape)
@@ -517,7 +581,7 @@ fun ProcessingStepPill(label: String, isComplete: Boolean, alpha: Float = 1f) {
             text = label,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Bold,
-            color = if (isComplete) FeeEmerald else BrandIndigo.copy(alpha = alpha),
+            color = if (isComplete) FeeEmerald else BrandIndigo,
             fontSize = 9.sp,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
         )
@@ -530,7 +594,8 @@ fun ProcessingStepPill(label: String, isComplete: Boolean, alpha: Float = 1f) {
 @Composable
 fun ConfirmationScreen(
     notice: NoticeData,
-    onReset: () -> Unit
+    onReset: () -> Unit,
+    onShareAnother: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
     LaunchedEffect(Unit) {
@@ -598,16 +663,16 @@ fun ConfirmationScreen(
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                // Primary CTA to return or scan next
+                // Primary CTA to return
                 Surface(
                     shape = RoundedCornerShape(16.dp),
                     color = Color.Transparent,
                     shadowElevation = 4.dp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(52.dp)
+                        .height(50.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(ActionButtonGradient)
                         .clickable { onReset() }
@@ -632,8 +697,137 @@ fun ConfirmationScreen(
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Secondary CTA to share another notice
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = SurfaceCardSecondary,
+                    border = BorderStroke(1.dp, BorderSubtle),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { onShareAnother() }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = null,
+                            tint = BrandIndigo,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Share Another Notice",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = BrandIndigo
+                        )
+                    }
+                }
             }
         }
     }
 }
+
+/**
+ * Modern High-Tech Error Screen with Retry
+ */
+@Composable
+fun ErrorScreen(
+    errorMessage: String,
+    onRetry: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            shape = RoundedCornerShape(24.dp),
+            color = SurfaceCard,
+            shadowElevation = 8.dp,
+            border = BorderStroke(1.dp, Color(0xFFFECACA)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(26.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(68.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFFEF2F2)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ErrorOutline,
+                        contentDescription = null,
+                        tint = Color(0xFFEF4444),
+                        modifier = Modifier.size(38.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+                Text(
+                    text = "Couldn't Process Notice",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = TextPrimary
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextSecondary,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = BrandIndigo,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { onRetry() }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Try Again",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 
