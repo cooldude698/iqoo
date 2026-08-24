@@ -1,5 +1,11 @@
 package com.iqoo.noticesorter.ui.components
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.animation.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,19 +13,27 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Assignment
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iqoo.noticesorter.model.NoticeData
 import com.iqoo.noticesorter.model.NoticeType
 import com.iqoo.noticesorter.ui.theme.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 @Composable
 fun NoticeCard(
@@ -27,6 +41,9 @@ fun NoticeCard(
     onNoticeUpdated: (NoticeData) -> Unit,
     onAddToCalendar: () -> Unit
 ) {
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+
     var showEditTitle by remember { mutableStateOf(false) }
     var showEditDate by remember { mutableStateOf(false) }
     var showEditTime by remember { mutableStateOf(false) }
@@ -35,13 +52,24 @@ fun NoticeCard(
 
     val noticeType = notice.noticeTypeEnum
 
-    Card(
+    // Relative date calculation helper (e.g. "In 3 days", "Tomorrow")
+    val relativeDateBadge = remember(notice.date) {
+        calculateRelativeDate(notice.date)
+    }
+
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(24.dp), // Smooth positive pill shape
-        colors = CardDefaults.cardColors(containerColor = PaletteCardBackground),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .shadow(
+                elevation = 12.dp,
+                shape = RoundedCornerShape(26.dp),
+                spotColor = Color(0x1F0F172A),
+                ambientColor = Color(0x0A0F172A)
+            ),
+        shape = RoundedCornerShape(26.dp),
+        color = SurfaceCard,
+        border = BorderStroke(1.dp, BorderSubtle)
     ) {
         Column(
             modifier = Modifier
@@ -49,67 +77,75 @@ fun NoticeCard(
                 .padding(22.dp)
         ) {
 
-            // Header Tag Row (Notice Category Badge & iQOO Phone-First Badge)
+            // 1. Category Pill & AI Confidence Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Category Chip (Tap to change)
                 Surface(
                     color = noticeType.containerColor,
                     contentColor = noticeType.contentColor,
                     shape = CircleShape,
-                    modifier = Modifier.clickable { showEditType = true }
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                            showEditType = true
+                        }
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val icon = when (noticeType) {
-                            NoticeType.EXAM -> Icons.Default.Assignment
+                            NoticeType.EXAM -> Icons.AutoMirrored.Filled.Assignment
                             NoticeType.FEE -> Icons.Default.AccountBalanceWallet
-                            NoticeType.EVENT -> Icons.Default.Event
+                            NoticeType.EVENT -> Icons.Default.Celebration
                             NoticeType.CIRCULAR -> Icons.Default.Description
                             NoticeType.OTHER -> Icons.Default.Info
                         }
                         Icon(
                             imageVector = icon,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(15.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = noticeType.label,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit Category",
-                            modifier = Modifier.size(12.dp)
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Change category",
+                            modifier = Modifier.size(14.dp)
                         )
                     }
                 }
 
+                // Confidence Status Badge
                 if (notice.isLowConfidence) {
                     Surface(
-                        color = Color(0xFFFFF4E5),
-                        contentColor = Color(0xFFB76E00),
-                        shape = CircleShape
+                        color = Color(0xFFFEF3C7),
+                        contentColor = ExamAmber,
+                        shape = CircleShape,
+                        border = BorderStroke(1.dp, Color(0xFFFDE68A))
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Warning,
+                                imageVector = Icons.Default.WarningAmber,
                                 contentDescription = null,
-                                modifier = Modifier.size(14.dp)
+                                modifier = Modifier.size(13.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Needs Date",
+                                text = "Needs Review",
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold
                             )
@@ -117,18 +153,19 @@ fun NoticeCard(
                     }
                 } else {
                     Surface(
-                        color = Color(0xFFF0F4F2),
-                        contentColor = PaletteMossGreen,
-                        shape = CircleShape
+                        color = Color(0xFFECFDF5),
+                        contentColor = FeeEmerald,
+                        shape = CircleShape,
+                        border = BorderStroke(1.dp, Color(0xFFA7F3D0))
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = Icons.Default.CheckCircle,
+                                imageVector = Icons.Default.AutoAwesome,
                                 contentDescription = null,
-                                modifier = Modifier.size(14.dp)
+                                modifier = Modifier.size(13.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
@@ -141,108 +178,153 @@ fun NoticeCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // Notice Title (Large & Editable)
+            // 2. Notice Title (Interactive Tap-to-Edit)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .clickable { showEditTitle = true }
-                    .padding(4.dp),
+                    .clickable {
+                        haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                        showEditTitle = true
+                    }
+                    .padding(vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = notice.title.ifBlank { "Untitled Notice" },
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = PaletteDarkText,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = TextPrimary,
+                    lineHeight = 28.sp,
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Title",
-                    tint = PaletteSoftSteel,
-                    modifier = Modifier.size(18.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(SurfaceCardSecondary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit Title",
+                        tint = TextSecondary,
+                        modifier = Modifier.size(15.dp)
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Date & Time Block (Pill design with Palette background)
+            // 3. Date & Time Widget (Split Modern Cards)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFF5F8FA), shape = RoundedCornerShape(18.dp))
-                    .border(1.dp, PaletteCardBorder, RoundedCornerShape(18.dp))
-                    .padding(16.dp),
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(SurfaceCardSecondary)
+                    .border(1.dp, BorderSubtle, RoundedCornerShape(18.dp))
+                    .padding(14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Date
+                // Date Column
                 Row(
                     modifier = Modifier
-                        .clickable { showEditDate = true }
+                        .weight(1f)
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable {
+                            haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                            showEditDate = true
+                        }
                         .padding(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFE8EEF5)),
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xFFEEF2FF)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.CalendarToday,
                             contentDescription = null,
-                            tint = PaletteSlateBlue,
-                            modifier = Modifier.size(18.dp)
+                            tint = BrandIndigo,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "EVENT DATE",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = TextMuted,
+                                fontSize = 10.sp
+                            )
+                            if (relativeDateBadge != null) {
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Surface(
+                                    color = Color(0xFFE0E7FF),
+                                    shape = CircleShape
+                                ) {
+                                    Text(
+                                        text = relativeDateBadge,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = BrandIndigo,
+                                        fontSize = 9.sp,
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp)
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "EVENT DATE",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = PaletteSubtext
-                        )
-                        Text(
-                            text = if (!notice.date.isNullOrBlank()) notice.date else "Tap to set date",
+                            text = if (!notice.date.isNullOrBlank()) notice.date else "Set Date ➔",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
-                            color = if (!notice.date.isNullOrBlank()) PaletteDarkText else Color(0xFFB76E00)
+                            color = if (!notice.date.isNullOrBlank()) TextPrimary else ExamAmber
                         )
                     }
                 }
 
-                Divider(
+                // Vertical Divider
+                Box(
                     modifier = Modifier
-                        .height(32.dp)
-                        .width(1.dp),
-                    color = PaletteCardBorder
+                        .height(36.dp)
+                        .width(1.dp)
+                        .background(BorderSubtle)
                 )
 
-                // Time
+                // Time Column
                 Row(
                     modifier = Modifier
-                        .clickable { showEditTime = true }
-                        .padding(4.dp),
+                        .weight(0.9f)
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable {
+                            haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                            showEditTime = true
+                        }
+                        .padding(start = 12.dp, top = 4.dp, bottom = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFEFF4EC)),
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xFFECFDF5)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Schedule,
                             contentDescription = null,
-                            tint = PaletteMossGreen,
-                            modifier = Modifier.size(18.dp)
+                            tint = FeeEmerald,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
@@ -250,102 +332,193 @@ fun NoticeCard(
                         Text(
                             text = "TIME",
                             style = MaterialTheme.typography.labelSmall,
-                            color = PaletteSubtext
+                            fontWeight = FontWeight.Bold,
+                            color = TextMuted,
+                            fontSize = 10.sp
                         )
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = notice.time ?: "All Day",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
-                            color = PaletteDarkText
+                            color = TextPrimary
                         )
                     }
                 }
             }
 
-            // Low Confidence Alert Banner
+            // Low Confidence Warning Alert
             if (notice.isLowConfidence) {
                 Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFFFF4E5), RoundedCornerShape(12.dp))
-                        .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Surface(
+                    color = Color(0xFFFFFBEB),
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, Color(0xFFFDE68A)),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.ErrorOutline,
-                        contentDescription = null,
-                        tint = Color(0xFFB76E00),
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Unclear date in notice image. Tap the date block above to fix.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFFB76E00)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.HelpOutline,
+                            contentDescription = null,
+                            tint = ExamAmber,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "No exact date found in notice image. Tap the date box above to set the event day.",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF92400E)
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Action Required Block
-            Text(
-                text = "ACTION REQUIRED",
-                style = MaterialTheme.typography.labelSmall,
-                color = PaletteSubtext
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .clickable { showEditAction = true }
-                    .background(Color(0xFFFAFBFD))
-                    .border(1.dp, PaletteCardBorder, RoundedCornerShape(14.dp))
-                    .padding(14.dp),
-                verticalAlignment = Alignment.CenterVertically
+            // 4. Action Required Hero Card
+            Surface(
+                color = Color(0xFFF8FAFC),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, BorderSubtle),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = notice.actionNeeded.ifBlank { "No action specified. Tap to add details." },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = PaletteDarkText,
-                    modifier = Modifier.weight(1f)
-                )
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Action",
-                    tint = PaletteSoftSteel,
-                    modifier = Modifier.size(16.dp)
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(14.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Bolt,
+                                contentDescription = null,
+                                tint = BrandIndigo,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "ACTION REQUIRED",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = BrandIndigo,
+                                letterSpacing = 0.5.sp
+                            )
+                        }
+
+                        // Copy Action Button
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .clickable {
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("Notice Action", notice.actionNeeded)
+                                    clipboard.setPrimaryClip(clip)
+                                    Toast.makeText(context, "Action copied to clipboard!", Toast.LENGTH_SHORT).show()
+                                }
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = "Copy",
+                                tint = TextSecondary,
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Spacer(modifier = Modifier.width(3.dp))
+                            Text(
+                                text = "Copy",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = TextSecondary,
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable {
+                                haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                                showEditAction = true
+                            }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = notice.actionNeeded.ifBlank { "No action specified. Tap to add details." },
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Normal,
+                            color = TextPrimary,
+                            lineHeight = 20.sp,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit Action",
+                            tint = TextMuted,
+                            modifier = Modifier.size(15.dp)
+                        )
+                    }
+                }
             }
 
-            Spacer(modifier = Modifier.height(26.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Primary Add to Calendar CTA with Positive Palette Gradient
-            Box(
+            // 5. Primary Glowing "Add to Calendar" CTA
+            Surface(
+                shape = RoundedCornerShape(18.dp),
+                color = Color.Transparent,
+                shadowElevation = 6.dp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(54.dp)
-                    .clip(CircleShape)
-                    .background(PositivePrimaryGradient)
-                    .clickable { onAddToCalendar() },
-                contentAlignment = Alignment.Center
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(ActionButtonGradient)
+                    .clickable {
+                        haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
+                        onAddToCalendar()
+                    }
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Icon(
-                        imageVector = Icons.Default.CalendarMonth,
+                        imageVector = Icons.Default.EventAvailable,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(22.dp)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = "Add to Phone Calendar",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                    Column(horizontalAlignment = Alignment.Start) {
+                        Text(
+                            text = "Add to Phone Calendar",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = "Syncs event & enables 24-hr reminder alert",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFFE0E7FF),
+                            fontSize = 10.sp
+                        )
+                    }
                 }
             }
         }
@@ -395,3 +568,26 @@ fun NoticeCard(
         )
     }
 }
+
+/**
+ * Calculates human-readable relative date (e.g. "Today", "Tomorrow", "In 5 days")
+ */
+private fun calculateRelativeDate(dateStr: String?): String? {
+    if (dateStr.isNullOrBlank()) return null
+    return try {
+        val targetDate = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE)
+        val today = LocalDate.now()
+        val daysBetween = ChronoUnit.DAYS.between(today, targetDate)
+        when {
+            daysBetween == 0L -> "Today"
+            daysBetween == 1L -> "Tomorrow"
+            daysBetween > 1L -> "In $daysBetween days"
+            daysBetween == -1L -> "Yesterday"
+            daysBetween < -1L -> "${-daysBetween}d ago"
+            else -> null
+        }
+    } catch (e: Exception) {
+        null
+    }
+}
+

@@ -9,29 +9,29 @@ enum class NoticeType(
     val contentColor: Color
 ) {
     EXAM(
-        label = "Exam & Tests",
-        containerColor = Color(0xFFE8EEF5), // Soft Slate Blue tint
-        contentColor = PaletteSlateBlue
+        label = "Exam & Deadlines",
+        containerColor = ExamAmberBg,
+        contentColor = ExamAmber
     ),
     FEE(
-        label = "Fee Deadline",
-        containerColor = Color(0xFFF3EFDF), // Warm Cream tint
-        contentColor = Color(0xFF7A6B3B)
+        label = "Tuition & Fees",
+        containerColor = FeeEmeraldBg,
+        contentColor = FeeEmerald
     ),
     EVENT(
-        label = "College Event",
-        containerColor = Color(0xFFEFF4EC), // Soft Sage Green tint
-        contentColor = PaletteMossGreen
+        label = "Campus Event",
+        containerColor = EventPurpleBg,
+        contentColor = EventPurple
     ),
     CIRCULAR(
         label = "Official Circular",
-        containerColor = Color(0xFFEAF0F6), // Soft Steel tint
-        contentColor = PaletteSlateBlue
+        containerColor = CircularBlueBg,
+        contentColor = CircularBlue
     ),
     OTHER(
         label = "General Notice",
-        containerColor = Color(0xFFF0F4F2), // Muted Moss tint
-        contentColor = PaletteDarkText
+        containerColor = OtherSlateBg,
+        contentColor = OtherSlate
     );
 
     companion object {
@@ -46,3 +46,4 @@ enum class NoticeType(
         }
     }
 }
+

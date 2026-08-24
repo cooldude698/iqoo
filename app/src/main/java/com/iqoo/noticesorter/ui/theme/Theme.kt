@@ -12,14 +12,14 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = PaletteSlateBlue,
-    secondary = PaletteSageGreen,
-    tertiary = PaletteMossGreen,
-    background = PaletteCream,
-    surface = Color.White,
+    primary = BrandIndigo,
+    secondary = BrandBlue,
+    tertiary = BrandCyan,
+    background = CanvasBackground,
+    surface = SurfaceCard,
     onPrimary = Color.White,
-    onBackground = PaletteDarkText,
-    onSurface = PaletteDarkText
+    onBackground = TextPrimary,
+    onSurface = TextPrimary
 )
 
 @Composable
@@ -33,7 +33,7 @@ fun NoticeSorterTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = PaletteSlateBlue.toArgb()
+            window.statusBarColor = BrandIndigoDark.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }
