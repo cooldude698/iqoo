@@ -46,7 +46,7 @@ fun NoticeSorterApp(
     LaunchedEffect(sharedImageUri, mockSelection) {
         uiState = AppUiState.LOADING
         val uriToProcess = sharedImageUri ?: mockSelection
-        currentNotice = processor.processNotice(uriToProcess)
+        currentNotice = processor.processNotice(uriToProcess, context)
         uiState = AppUiState.RESULT_CARD
     }
 
