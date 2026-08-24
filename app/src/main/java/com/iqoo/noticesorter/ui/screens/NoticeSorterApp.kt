@@ -349,6 +349,11 @@ fun ConfirmationScreen(
     notice: NoticeData,
     onReset: () -> Unit
 ) {
+    val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
+    LaunchedEffect(Unit) {
+        haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
