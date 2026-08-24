@@ -220,7 +220,12 @@ fun NoticeCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            if (!notice.date.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                UrgencyBadge(dateString = notice.date)
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
 
             // 3. Date & Time Widget (Split Modern Cards)
             Row(
@@ -786,6 +791,48 @@ fun OriginOSAtomicWidgetPreview(notice: NoticeData) {
         }
     }
 }
+
+/**
+ * Smart Calendar Conflict / Urgency Detector Badge
+ */
+@Composable
+fun UrgencyBadge(dateString: String?) {
+    if (dateString == null) return
+
+    val daysLeft = remember(dateString) {
+        try {
+            val noticeDate = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
+            val today = LocalDate.now()
+            ChronoUnit.DAYS.between(today, noticeDate)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    val (badgeText, badgeColor, textColor) = when {
+        daysLeft == null -> Triple("Upcoming Event", Color(0xFFF1F5F9), Color(0xFF475569))
+        daysLeft < 0 -> Triple("Past Date", Color(0xFFFEE2E2), Color(0xFF991B1B))
+        daysLeft == 0L -> Triple("🚨 DUE TODAY!", Color(0xFFFEE2E2), Color(0xFFDC2626))
+        daysLeft == 1L -> Triple("⚠️ Due Tomorrow", Color(0xFFFEF3C7), Color(0xFFD97706))
+        daysLeft <= 3L -> Triple("⚡ Due in $daysLeft days", Color(0xFFFEF3C7), Color(0xFFB45309))
+        else -> Triple("📅 $daysLeft days remaining", Color(0xFFECFDF5), Color(0xFF047857))
+    }
+
+    Surface(
+        color = badgeColor,
+        shape = RoundedCornerShape(10.dp),
+        border = BorderStroke(1.dp, textColor.copy(alpha = 0.25f))
+    ) {
+        Text(
+            text = badgeText,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = textColor,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+        )
+    }
+}
+
 
 
 
