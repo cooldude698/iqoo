@@ -51,6 +51,7 @@ fun NoticeCard(
     var showEditTime by remember { mutableStateOf(false) }
     var showEditType by remember { mutableStateOf(false) }
     var showEditAction by remember { mutableStateOf(false) }
+    var showAtomicPreview by remember { mutableStateOf(false) }
 
     val noticeType = notice.noticeTypeEnum
 
@@ -562,6 +563,48 @@ fun NoticeCard(
                     color = BrandIndigo
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 7. OriginOS Atomic Widget Live Preview Toggle
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable {
+                        haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                        showAtomicPreview = !showAtomicPreview
+                    }
+                    .padding(vertical = 6.dp, horizontal = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Widgets,
+                        contentDescription = null,
+                        tint = BrandIndigo,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "OriginOS Desktop Atomic Card",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = BrandIndigo
+                    )
+                }
+                Icon(
+                    imageVector = if (showAtomicPreview) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = BrandIndigo,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+
+            AnimatedVisibility(visible = showAtomicPreview) {
+                OriginOSAtomicWidgetPreview(notice = notice)
+            }
         }
     }
 
@@ -660,5 +703,89 @@ fun shareSummaryToWhatsApp(context: Context, notice: NoticeData) {
         context.startActivity(chooser)
     }
 }
+
+/**
+ * OriginOS Desktop Atomic Card interactive widget preview
+ */
+@Composable
+fun OriginOSAtomicWidgetPreview(notice: NoticeData) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(22.dp),
+        color = Color(0xFF1E1B4B), // Deep OriginOS Dark Slate
+        shadowElevation = 8.dp
+    ) {
+        Column(modifier = Modifier.padding(18.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(BrandIndigo),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("⚡", fontSize = 12.sp)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "ORIGINOS ATOMIC WIDGET",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFFA5B4FC),
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+                }
+                Surface(
+                    color = Color(0xFF312E81),
+                    shape = CircleShape
+                ) {
+                    Text(
+                        text = "Live Sync",
+                        color = Color(0xFF818CF8),
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = notice.title.ifBlank { "Campus Notice" },
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                maxLines = 1
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "📅 ${notice.date ?: "TBD"}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFFC7D2FE),
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "⏰ ${notice.time ?: "All Day"}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFFC7D2FE),
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+    }
+}
+
 
 
