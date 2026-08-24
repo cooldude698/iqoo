@@ -5,12 +5,15 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.content.IntentCompat
 import com.iqoo.noticesorter.data.RealNoticeProcessor
 import com.iqoo.noticesorter.ui.screens.NoticeSorterApp
+import com.iqoo.noticesorter.ui.screens.SplashScreen
 import com.iqoo.noticesorter.ui.theme.NoticeSorterTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,16 +24,25 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         // Handle initial intent when activity is launched
         sharedUriState = handleIncomingShareIntent(intent)
 
         setContent {
             NoticeSorterTheme {
-                NoticeSorterApp(
-                    sharedImageUri = sharedUriState,
-                    processor = processor
-                )
+                var showSplash by remember { mutableStateOf(sharedUriState == null) }
+
+                if (showSplash) {
+                    SplashScreen(
+                        onSplashFinished = { showSplash = false }
+                    )
+                } else {
+                    NoticeSorterApp(
+                        sharedImageUri = sharedUriState,
+                        processor = processor
+                    )
+                }
             }
         }
     }

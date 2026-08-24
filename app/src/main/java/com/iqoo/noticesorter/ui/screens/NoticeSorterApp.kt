@@ -43,7 +43,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 enum class AppUiState {
-    SPLASH,
     IDLE,
     LOADING,
     RESULT_CARD,
@@ -61,9 +60,9 @@ fun NoticeSorterApp(
     val haptic = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
 
-    // Start with SPLASH on normal launch, or LOADING if opened directly via share intent
+    // Start in IDLE if opened normally, or LOADING if opened via share intent
     var uiState by rememberSaveable { 
-        mutableStateOf(if (sharedImageUri != null) AppUiState.LOADING else AppUiState.SPLASH) 
+        mutableStateOf(if (sharedImageUri != null) AppUiState.LOADING else AppUiState.IDLE) 
     }
     var currentNotice by remember { mutableStateOf<NoticeData?>(null) }
     var errorMessage by remember { mutableStateOf("") }
@@ -98,16 +97,6 @@ fun NoticeSorterApp(
             haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
             processTarget(it.toString())
         }
-    }
-
-    // Show branded splash screen on fresh launch
-    if (uiState == AppUiState.SPLASH) {
-        SplashScreen(
-            onSplashFinished = {
-                uiState = AppUiState.IDLE
-            }
-        )
-        return
     }
 
     Scaffold(
@@ -249,7 +238,7 @@ fun NoticeSorterApp(
                 label = "ScreenTransition"
             ) { targetState ->
                 when (targetState) {
-                    AppUiState.SPLASH, AppUiState.IDLE -> { /* Handled */ }
+                    AppUiState.IDLE -> { /* Clean IDLE state handled above */ }
                     AppUiState.LOADING -> ModernLoadingScreen()
                     AppUiState.RESULT_CARD -> {
                         currentNotice?.let { notice ->
