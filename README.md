@@ -1,6 +1,14 @@
 # 🏛️ College OS & Notice Sorter — iQOO Hackathon (Smart Education Track)
 
-> **All-In-One Campus Digital Operating System + OriginOS Vision AI**: Bringing academic management, campus social networking, and **AI-powered Notice-to-Calendar automation** into one unified student platform.
+> **Extending iQOO OriginOS AI Vision**: Moving from *reading* on-screen text (AI Screen Translation & DocMaster) to **acting on what it means**.
+
+---
+
+## 👥 Team Members
+
+- 👨‍💻 **Aman Jain** ([@cooldude698](https://github.com/cooldude698)) — *Android App UI, Share Intent Receiver, Calendar Integration, Design System & Pitch Owner*
+- 👨‍💻 **Prit Thacker** ([@imagine1phoenix](https://github.com/imagine1phoenix)) — *OCR Engine, Gemini LLM Pipeline & Structured Parsing*
+- 👨‍💻 **Hitarth Kothari** ([@hitarthkothari9641-coder](https://github.com/hitarthkothari9641-coder)) — *Full-Stack Platform Architecture, Backend API, Admin Dashboard & Infrastructure*
 
 ---
 
@@ -8,7 +16,7 @@
 
 **College OS** is a multi-tenant, enterprise-grade digital operating system built for Indian higher education institutions. It connects students, faculty, campus clubs, and ERP systems into a seamless digital ecosystem.
 
-Integrated at the heart of College OS is **Notice Sorter** — an AI-powered OriginOS feature built specifically for the iQOO Hackathon. It solves the everyday student struggle of missed deadlines buried in WhatsApp groups by extracting dates, deadlines, and action items from notice photos/PDFs and syncing them to the native phone calendar in **one tap**.
+Integrated at the heart of College OS is **Notice Sorter** — an AI-powered OriginOS feature built specifically for the iQOO Hackathon by **Aman Jain**, **Prit Thacker**, and **Hitarth Kothari**. It solves the everyday student struggle of missed deadlines buried in WhatsApp groups by extracting dates, deadlines, and action items from notice photos/PDFs and syncing them to the native phone calendar in **one tap**.
 
 ---
 
@@ -181,12 +189,12 @@ npm run start:dev
 ## 👥 Team & Authors
 
 - **Aman Jain** ([@cooldude698](https://github.com/cooldude698)) — *Android App UI, Share Intent Receiver, Calendar Integration, Design System & Pitch Owner*
-- **Hitarth Kothari** ([@hitarthkothari9641-coder](https://github.com/hitarthkothari9641-coder)) — *Full-Stack Platform Architecture, Backend API, Admin Dashboard & Infrastructure*
 - **Prit Thacker** ([@imagine1phoenix](https://github.com/imagine1phoenix)) — *OCR Engine, Gemini LLM Pipeline & Structured Parsing*
+- **Hitarth Kothari** ([@hitarthkothari9641-coder](https://github.com/hitarthkothari9641-coder)) — *Full-Stack Platform Architecture, Backend API, Admin Dashboard & Infrastructure*
 
 ---
 
 <p align="center">
   <b>College OS & Notice Sorter — iQOO Hackathon 2026 (Smart Education Track)</b><br>
-  <i>"From reading on-screen text to acting on what it means."</i>
+  <i>Built by Aman Jain, Prit Thacker & Hitarth Kothari</i>
 </p>
