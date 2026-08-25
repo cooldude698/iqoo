@@ -1,0 +1,285 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.collegeos"
+4    android:versionCode="1"
+5    android:versionName="0.1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:4:5-67
+11-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:4:22-64
+12    <uses-permission
+12-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:5:5-107
+13        android:name="android.permission.READ_EXTERNAL_STORAGE"
+13-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:5:22-77
+14        android:maxSdkVersion="32" />
+14-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:5:78-104
+15    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+15-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:6:5-76
+15-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:6:22-73
+16
+17    <permission
+17-->[androidx.core:core:1.13.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/74356e286cb24685b74a0b4b40880805/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+18        android:name="com.collegeos.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+18-->[androidx.core:core:1.13.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/74356e286cb24685b74a0b4b40880805/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+19        android:protectionLevel="signature" />
+19-->[androidx.core:core:1.13.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/74356e286cb24685b74a0b4b40880805/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+20
+21    <uses-permission android:name="com.collegeos.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" /> <!-- Although the *SdkVersion is captured in gradle build files, this is required for non gradle builds -->
+21-->[androidx.core:core:1.13.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/74356e286cb24685b74a0b4b40880805/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+21-->[androidx.core:core:1.13.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/74356e286cb24685b74a0b4b40880805/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+22    <!-- <uses-sdk android:minSdkVersion="14"/> -->
+23    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+23-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /Users/cooldude69/.gradle/caches/9.3.1/transforms/43e235dc868b15cec692711815c3ed97/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:25:5-79
+23-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /Users/cooldude69/.gradle/caches/9.3.1/transforms/43e235dc868b15cec692711815c3ed97/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:25:22-76
+24
+25    <application
+25-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:8:5-46:19
+26        android:name="com.collegeos.CollegeOsApplication"
+26-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:9:9-45
+27        android:allowBackup="true"
+27-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:10:9-35
+28        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+28-->[androidx.core:core:1.13.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/74356e286cb24685b74a0b4b40880805/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+29        android:debuggable="true"
+30        android:extractNativeLibs="false"
+31        android:icon="@mipmap/ic_launcher"
+31-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:11:9-43
+32        android:label="@string/app_name"
+32-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:12:9-41
+33        android:roundIcon="@mipmap/ic_launcher_round"
+33-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:13:9-54
+34        android:supportsRtl="true"
+34-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:14:9-35
+35        android:theme="@style/Theme.NoticeSorter" >
+35-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:15:9-50
+36        <activity
+36-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:17:9-44:20
+37            android:name="com.collegeos.MainActivity"
+37-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:18:13-41
+38            android:exported="true"
+38-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:19:13-36
+39            android:label="@string/app_name"
+39-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:20:13-45
+40            android:launchMode="singleTop"
+40-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:21:13-43
+41            android:theme="@style/Theme.NoticeSorter" >
+41-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:22:13-54
+42
+43            <!-- Standard App Launcher Intent -->
+44            <intent-filter>
+44-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:25:13-28:29
+45                <action android:name="android.intent.action.MAIN" />
+45-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:26:17-69
+45-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:26:25-66
+46
+47                <category android:name="android.intent.category.LAUNCHER" />
+47-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:27:17-77
+47-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:27:27-74
+48            </intent-filter>
+49
+50            <!-- Share Sheet Target for Single Image/PDF from WhatsApp / Gallery / Files -->
+51            <intent-filter>
+51-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:31:13-36:29
+52                <action android:name="android.intent.action.SEND" />
+52-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:32:17-69
+52-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:32:25-66
+53
+54                <category android:name="android.intent.category.DEFAULT" />
+54-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:33:17-76
+54-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:33:27-73
+55
+56                <data android:mimeType="image/*" />
+56-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:34:17-52
+56-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:34:23-49
+57                <data android:mimeType="application/pdf" />
+57-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:34:17-52
+57-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:34:23-49
+58            </intent-filter>
+59
+60            <!-- Share Sheet Target for Multiple Images (ACTION_SEND_MULTIPLE) -->
+61            <intent-filter>
+61-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:39:13-43:29
+62                <action android:name="android.intent.action.SEND_MULTIPLE" />
+62-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:40:17-78
+62-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:40:25-75
+63
+64                <category android:name="android.intent.category.DEFAULT" />
+64-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:33:17-76
+64-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:33:27-73
+65
+66                <data android:mimeType="image/*" />
+66-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:34:17-52
+66-->/Users/cooldude69/Desktop/iqoo2/android/app/src/main/AndroidManifest.xml:34:23-49
+67            </intent-filter>
+68        </activity>
+69
+70        <service
+70-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/cd267677a33dce85f8c2c75ea64c2a04/transformed/play-services-mlkit-text-recognition-common-19.1.0/AndroidManifest.xml:9:9-15:19
+71            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+71-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/cd267677a33dce85f8c2c75ea64c2a04/transformed/play-services-mlkit-text-recognition-common-19.1.0/AndroidManifest.xml:10:13-91
+72            android:directBootAware="true"
+72-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:17:13-43
+73            android:exported="false" >
+73-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/cd267677a33dce85f8c2c75ea64c2a04/transformed/play-services-mlkit-text-recognition-common-19.1.0/AndroidManifest.xml:11:13-37
+74            <meta-data
+74-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/cd267677a33dce85f8c2c75ea64c2a04/transformed/play-services-mlkit-text-recognition-common-19.1.0/AndroidManifest.xml:12:13-14:85
+75                android:name="com.google.firebase.components:com.google.mlkit.vision.text.internal.TextRegistrar"
+75-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/cd267677a33dce85f8c2c75ea64c2a04/transformed/play-services-mlkit-text-recognition-common-19.1.0/AndroidManifest.xml:13:17-114
+76                android:value="com.google.firebase.components.ComponentRegistrar" />
+76-->[com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/cd267677a33dce85f8c2c75ea64c2a04/transformed/play-services-mlkit-text-recognition-common-19.1.0/AndroidManifest.xml:14:17-82
+77            <meta-data
+77-->[com.google.mlkit:vision-common:17.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/38f98e0f81fd6e0f5109d223d9fc2bd3/transformed/vision-common-17.3.0/AndroidManifest.xml:12:13-14:85
+78                android:name="com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar"
+78-->[com.google.mlkit:vision-common:17.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/38f98e0f81fd6e0f5109d223d9fc2bd3/transformed/vision-common-17.3.0/AndroidManifest.xml:13:17-124
+79                android:value="com.google.firebase.components.ComponentRegistrar" />
+79-->[com.google.mlkit:vision-common:17.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/38f98e0f81fd6e0f5109d223d9fc2bd3/transformed/vision-common-17.3.0/AndroidManifest.xml:14:17-82
+80            <meta-data
+80-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:20:13-22:85
+81                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+81-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:21:17-120
+82                android:value="com.google.firebase.components.ComponentRegistrar" />
+82-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:22:17-82
+83        </service>
+84
+85        <provider
+85-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:9:9-13:38
+86            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+86-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:10:13-78
+87            android:authorities="com.collegeos.mlkitinitprovider"
+87-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:11:13-69
+88            android:exported="false"
+88-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:12:13-37
+89            android:initOrder="99" />
+89-->[com.google.mlkit:common:18.11.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/866f5b73531e144abfd673bb0f3126d3/transformed/common-18.11.0/AndroidManifest.xml:13:13-35
+90
+91        <activity
+91-->[com.google.android.gms:play-services-base:18.5.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/0a5c47d0cc86f89501f851e7e699b1f3/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:9-173
+92            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+92-->[com.google.android.gms:play-services-base:18.5.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/0a5c47d0cc86f89501f851e7e699b1f3/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:19-85
+93            android:exported="false"
+93-->[com.google.android.gms:play-services-base:18.5.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/0a5c47d0cc86f89501f851e7e699b1f3/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:146-170
+94            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+94-->[com.google.android.gms:play-services-base:18.5.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/0a5c47d0cc86f89501f851e7e699b1f3/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:86-145
+95        <activity
+95-->[androidx.compose.ui:ui-tooling-android:1.6.8] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1b918688056a399c8c76c0d324d601e6/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
+96            android:name="androidx.compose.ui.tooling.PreviewActivity"
+96-->[androidx.compose.ui:ui-tooling-android:1.6.8] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1b918688056a399c8c76c0d324d601e6/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
+97            android:exported="true" />
+97-->[androidx.compose.ui:ui-tooling-android:1.6.8] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1b918688056a399c8c76c0d324d601e6/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
+98
+99        <provider
+99-->[androidx.emoji2:emoji2:1.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1141a888cd14f66ad92e0f3a87c38bf1/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+100            android:name="androidx.startup.InitializationProvider"
+100-->[androidx.emoji2:emoji2:1.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1141a888cd14f66ad92e0f3a87c38bf1/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+101            android:authorities="com.collegeos.androidx-startup"
+101-->[androidx.emoji2:emoji2:1.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1141a888cd14f66ad92e0f3a87c38bf1/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+102            android:exported="false" >
+102-->[androidx.emoji2:emoji2:1.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1141a888cd14f66ad92e0f3a87c38bf1/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+103            <meta-data
+103-->[androidx.emoji2:emoji2:1.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1141a888cd14f66ad92e0f3a87c38bf1/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+104                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+104-->[androidx.emoji2:emoji2:1.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1141a888cd14f66ad92e0f3a87c38bf1/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+105                android:value="androidx.startup" />
+105-->[androidx.emoji2:emoji2:1.3.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1141a888cd14f66ad92e0f3a87c38bf1/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+106            <meta-data
+106-->[androidx.lifecycle:lifecycle-process:2.8.4] /Users/cooldude69/.gradle/caches/9.3.1/transforms/0e1f01e37157d247da6e99efbf93d5d1/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:29:13-31:52
+107                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+107-->[androidx.lifecycle:lifecycle-process:2.8.4] /Users/cooldude69/.gradle/caches/9.3.1/transforms/0e1f01e37157d247da6e99efbf93d5d1/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:30:17-78
+108                android:value="androidx.startup" />
+108-->[androidx.lifecycle:lifecycle-process:2.8.4] /Users/cooldude69/.gradle/caches/9.3.1/transforms/0e1f01e37157d247da6e99efbf93d5d1/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:31:17-49
+109            <meta-data
+109-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+110                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+110-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+111                android:value="androidx.startup" />
+111-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+112        </provider>
+113
+114        <activity
+114-->[androidx.compose.ui:ui-test-manifest:1.6.8] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1b1af28c4cf52668827993a93d735abd/transformed/ui-test-manifest-1.6.8/AndroidManifest.xml:23:9-25:39
+115            android:name="androidx.activity.ComponentActivity"
+115-->[androidx.compose.ui:ui-test-manifest:1.6.8] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1b1af28c4cf52668827993a93d735abd/transformed/ui-test-manifest-1.6.8/AndroidManifest.xml:24:13-63
+116            android:exported="true" />
+116-->[androidx.compose.ui:ui-test-manifest:1.6.8] /Users/cooldude69/.gradle/caches/9.3.1/transforms/1b1af28c4cf52668827993a93d735abd/transformed/ui-test-manifest-1.6.8/AndroidManifest.xml:25:13-36
+117
+118        <receiver
+118-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+119            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+119-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+120            android:directBootAware="false"
+120-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+121            android:enabled="true"
+121-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+122            android:exported="true"
+122-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+123            android:permission="android.permission.DUMP" >
+123-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+124            <intent-filter>
+124-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+125                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+125-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+125-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+126            </intent-filter>
+127            <intent-filter>
+127-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+128                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+128-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+128-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+129            </intent-filter>
+130            <intent-filter>
+130-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+131                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+131-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+131-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+132            </intent-filter>
+133            <intent-filter>
+133-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+134                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+134-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+134-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/cooldude69/.gradle/caches/9.3.1/transforms/2343b7bd76569e2748646f8f1d85f9e3/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+135            </intent-filter>
+136        </receiver>
+137
+138        <meta-data
+138-->[com.google.android.gms:play-services-basement:18.4.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/8bf48365bf1efcab85f01889d8f81a12/transformed/play-services-basement-18.4.0/AndroidManifest.xml:6:9-122
+139            android:name="com.google.android.gms.version"
+139-->[com.google.android.gms:play-services-basement:18.4.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/8bf48365bf1efcab85f01889d8f81a12/transformed/play-services-basement-18.4.0/AndroidManifest.xml:6:20-65
+140            android:value="@integer/google_play_services_version" />
+140-->[com.google.android.gms:play-services-basement:18.4.0] /Users/cooldude69/.gradle/caches/9.3.1/transforms/8bf48365bf1efcab85f01889d8f81a12/transformed/play-services-basement-18.4.0/AndroidManifest.xml:6:66-119
+141
+142        <service
+142-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /Users/cooldude69/.gradle/caches/9.3.1/transforms/43e235dc868b15cec692711815c3ed97/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:29:9-35:19
+143            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+143-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /Users/cooldude69/.gradle/caches/9.3.1/transforms/43e235dc868b15cec692711815c3ed97/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:30:13-103
+144            android:exported="false" >
+144-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /Users/cooldude69/.gradle/caches/9.3.1/transforms/43e235dc868b15cec692711815c3ed97/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:31:13-37
+145            <meta-data
+145-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /Users/cooldude69/.gradle/caches/9.3.1/transforms/43e235dc868b15cec692711815c3ed97/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:32:13-34:39
+146                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+146-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /Users/cooldude69/.gradle/caches/9.3.1/transforms/43e235dc868b15cec692711815c3ed97/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:33:17-94
+147                android:value="cct" />
+147-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /Users/cooldude69/.gradle/caches/9.3.1/transforms/43e235dc868b15cec692711815c3ed97/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:34:17-36
+148        </service>
+149        <service
+149-->[com.google.android.datatransport:transport-runtime:2.2.6] /Users/cooldude69/.gradle/caches/9.3.1/transforms/c7db6ff1e31f6bddb632f32967b25b07/transformed/transport-runtime-2.2.6/AndroidManifest.xml:26:9-30:19
+150            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+150-->[com.google.android.datatransport:transport-runtime:2.2.6] /Users/cooldude69/.gradle/caches/9.3.1/transforms/c7db6ff1e31f6bddb632f32967b25b07/transformed/transport-runtime-2.2.6/AndroidManifest.xml:27:13-117
+151            android:exported="false"
+151-->[com.google.android.datatransport:transport-runtime:2.2.6] /Users/cooldude69/.gradle/caches/9.3.1/transforms/c7db6ff1e31f6bddb632f32967b25b07/transformed/transport-runtime-2.2.6/AndroidManifest.xml:28:13-37
+152            android:permission="android.permission.BIND_JOB_SERVICE" >
+152-->[com.google.android.datatransport:transport-runtime:2.2.6] /Users/cooldude69/.gradle/caches/9.3.1/transforms/c7db6ff1e31f6bddb632f32967b25b07/transformed/transport-runtime-2.2.6/AndroidManifest.xml:29:13-69
+153        </service>
+154
+155        <receiver
+155-->[com.google.android.datatransport:transport-runtime:2.2.6] /Users/cooldude69/.gradle/caches/9.3.1/transforms/c7db6ff1e31f6bddb632f32967b25b07/transformed/transport-runtime-2.2.6/AndroidManifest.xml:32:9-34:40
+156            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+156-->[com.google.android.datatransport:transport-runtime:2.2.6] /Users/cooldude69/.gradle/caches/9.3.1/transforms/c7db6ff1e31f6bddb632f32967b25b07/transformed/transport-runtime-2.2.6/AndroidManifest.xml:33:13-132
+157            android:exported="false" />
+157-->[com.google.android.datatransport:transport-runtime:2.2.6] /Users/cooldude69/.gradle/caches/9.3.1/transforms/c7db6ff1e31f6bddb632f32967b25b07/transformed/transport-runtime-2.2.6/AndroidManifest.xml:34:13-37
+158    </application>
+159
+160</manifest>

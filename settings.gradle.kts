@@ -16,5 +16,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NoticeSorter"
+rootProject.name = "CollegeOS"
 include(":app")
+project(":app").projectDir = file("android/app")
+
