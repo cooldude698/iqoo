@@ -63,6 +63,11 @@ Notice Sorter is a native Android application built specifically for **iQOO's Or
   - **Digitize Your Notice Card**: Interactive upload button & Drag-and-Drop drop zone for picking local photos/PDFs.
   - **Hackathon Demo Chips**: Instant one-tap sample notice presets (`Exam Notice`, `Fee Circular`, `Event`, `Needs Date`) for live stage demonstrations.
 
+### 🏆 8. Saved Tech Events & Hackathons Tracker
+- Dedicated in-app feed (**"Saved Tech Events & Deadlines"**) designed for students to track all upcoming hackathon slots, tech fest deadlines, exams, and fee schedules in one central hub.
+- Features filter chips: **`All Events`**, **`Hackathons 🚀`**, and **`Exams & Fees 📝`**.
+- Every saved event card includes a **1-tap "Sync"** button to push deadlines to the native phone calendar instantly.
+
 ---
 
 ## 🎯 Strategic Fit for iQOO & OriginOS
