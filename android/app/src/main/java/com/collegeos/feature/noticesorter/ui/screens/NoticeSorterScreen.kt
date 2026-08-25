@@ -73,19 +73,35 @@ fun NoticeSorterApp(
         mutableStateOf(
             listOf(
                 NoticeData(
-                    title = "iQOO City Battle Hackathon 2026",
+                    title = "iQOO OriginOS City Battle Hackathon 2026",
                     date = "2026-08-30",
                     time = "10:00",
                     type = "event",
-                    actionNeeded = "Register team of 3 on college portal & prepare 60-sec pitch.",
+                    actionNeeded = "Register team of 3 on portal & prepare 60-sec pitch for Smart Education Track.",
                     confidence = "high"
                 ),
                 NoticeData(
-                    title = "Smart India Hackathon 2026 - State Slot",
+                    title = "Smart India Hackathon 2026 - State Level Finals",
                     date = "2026-09-15",
                     time = "09:00",
                     type = "event",
                     actionNeeded = "Submit problem statement PPT to department coordinator.",
+                    confidence = "high"
+                ),
+                NoticeData(
+                    title = "Google Cloud Generative AI Sprint 2026",
+                    date = "2026-09-22",
+                    time = "11:00",
+                    type = "event",
+                    actionNeeded = "Register Google Cloud Skills Boost account and join Discord channel.",
+                    confidence = "high"
+                ),
+                NoticeData(
+                    title = "National Autonomous Robotics Challenge",
+                    date = "2026-10-05",
+                    time = "10:30",
+                    type = "event",
+                    actionNeeded = "Submit circuit schematic and robot dimension blueprints to Lab 4.",
                     confidence = "high"
                 ),
                 NoticeData(
@@ -97,11 +113,11 @@ fun NoticeSorterApp(
                     confidence = "high"
                 ),
                 NoticeData(
-                    title = "Even Semester Tuition Fee Payment",
+                    title = "Even Semester Tuition Fee Payment Notice",
                     date = "2026-09-05",
                     time = "17:00",
                     type = "fee",
-                    actionNeeded = "Pay semester tuition fee of Rs 45,000 on portal before 5 PM.",
+                    actionNeeded = "Pay semester tuition fee of Rs 45,000 on portal before 5 PM to avoid fine.",
                     confidence = "high"
                 )
             )
@@ -540,16 +556,16 @@ fun SampleNoticeSelector(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             SampleChip(
-                label = "📝  Exam",
+                label = "🏆  iQOO Hackathon",
+                isSelected = selectedKey == "hackathon",
+                modifier = Modifier.weight(1f),
+                onClick = { onSelect("hackathon") }
+            )
+            SampleChip(
+                label = "📝  Midterm Exam",
                 isSelected = selectedKey == "exam",
                 modifier = Modifier.weight(1f),
                 onClick = { onSelect("exam") }
-            )
-            SampleChip(
-                label = "💰  Fee Dues",
-                isSelected = selectedKey == "fee",
-                modifier = Modifier.weight(1f),
-                onClick = { onSelect("fee") }
             )
         }
 
@@ -561,13 +577,34 @@ fun SampleNoticeSelector(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             SampleChip(
-                label = "🚀  Event",
+                label = "💰  Tuition Fee",
+                isSelected = selectedKey == "fee",
+                modifier = Modifier.weight(1f),
+                onClick = { onSelect("fee") }
+            )
+            SampleChip(
+                label = "🚀  Tech Fest Event",
                 isSelected = selectedKey == "event",
                 modifier = Modifier.weight(1f),
                 onClick = { onSelect("event") }
             )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Row 3
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             SampleChip(
-                label = "⚠️  Blurry",
+                label = "🤖  Robotics Challenge",
+                isSelected = selectedKey == "robotics",
+                modifier = Modifier.weight(1f),
+                onClick = { onSelect("robotics") }
+            )
+            SampleChip(
+                label = "⚠️  Blurry Notice",
                 isSelected = selectedKey == "low",
                 modifier = Modifier.weight(1f),
                 onClick = { onSelect("low") }
