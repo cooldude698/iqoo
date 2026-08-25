@@ -4,6 +4,16 @@
 
 ---
 
+## 📲 Direct Mobile Installation & Download Links
+
+| Resource | Direct Link |
+|---|---|
+| 📦 **Direct APK Download (Install on Android)** | [**Download CollegeOS-NoticeSorter.apk (v1.0.0)**](https://github.com/cooldude698/iqoo/releases/download/v1.0.0/app-debug.apk) |
+| 🚀 **GitHub Releases Page** | [**View Release v1.0.0**](https://github.com/cooldude698/iqoo/releases/tag/v1.0.0) |
+| 🐙 **Source Code Repository** | [**github.com/cooldude698/iqoo**](https://github.com/cooldude698/iqoo) |
+
+---
+
 ## 👥 Team Members
 
 - 👨‍💻 **Aman Jain** ([@cooldude698](https://github.com/cooldude698)) — *Android App UI, Share Intent Receiver, Calendar Integration, Design System & Pitch Owner*
