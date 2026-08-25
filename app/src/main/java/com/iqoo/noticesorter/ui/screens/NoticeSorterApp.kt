@@ -68,6 +68,46 @@ fun NoticeSorterApp(
     var errorMessage by remember { mutableStateOf("") }
     var lastProcessedTarget by remember { mutableStateOf<String?>(null) }
 
+    // Saved Tech Events & Hackathons State
+    var savedNotices by remember {
+        mutableStateOf(
+            listOf(
+                NoticeData(
+                    title = "iQOO City Battle Hackathon 2026",
+                    date = "2026-08-30",
+                    time = "10:00",
+                    type = "event",
+                    actionNeeded = "Register team of 3 on college portal & prepare 60-sec pitch.",
+                    confidence = "high"
+                ),
+                NoticeData(
+                    title = "Smart India Hackathon 2026 - State Slot",
+                    date = "2026-09-15",
+                    time = "09:00",
+                    type = "event",
+                    actionNeeded = "Submit problem statement PPT to department coordinator.",
+                    confidence = "high"
+                ),
+                NoticeData(
+                    title = "Mid-Term Examination Schedule - CS & EC",
+                    date = "2026-09-12",
+                    time = "09:30",
+                    type = "exam",
+                    actionNeeded = "Submit hall ticket form & bring valid college ID to Exam Hall 3.",
+                    confidence = "high"
+                ),
+                NoticeData(
+                    title = "Even Semester Tuition Fee Payment",
+                    date = "2026-09-05",
+                    time = "17:00",
+                    type = "fee",
+                    actionNeeded = "Pay semester tuition fee of Rs 45,000 on portal before 5 PM.",
+                    confidence = "high"
+                )
+            )
+        )
+    }
+
     // Helper function to process notices cleanly
     fun processTarget(uriOrMock: String) {
         lastProcessedTarget = uriOrMock
@@ -224,6 +264,13 @@ fun NoticeSorterApp(
                     }
                 )
 
+                TechEventsAndHackathonsTracker(
+                    events = savedNotices,
+                    onSyncCalendar = { event ->
+                        CalendarLauncher.launchCalendarEvent(context, event)
+                    }
+                )
+
                 HowItWorksSection()
             }
 
@@ -253,6 +300,11 @@ fun NoticeSorterApp(
                                     notice = notice,
                                     onNoticeUpdated = { updated -> currentNotice = updated },
                                     onAddToCalendar = {
+                                        notice.let { item ->
+                                            if (savedNotices.none { it.title == item.title && it.date == item.date }) {
+                                                savedNotices = listOf(item) + savedNotices
+                                            }
+                                        }
                                         val launched = CalendarLauncher.launchCalendarEvent(context, notice)
                                         if (launched) {
                                             uiState = AppUiState.CONFIRMED
@@ -1028,6 +1080,256 @@ fun ErrorScreen(
         }
     }
 }
+
+/**
+ * Saved Tech Events, Hackathons & Deadline Tracker Feed
+ */
+@Composable
+fun TechEventsAndHackathonsTracker(
+    events: List<NoticeData>,
+    onSyncCalendar: (NoticeData) -> Unit
+) {
+    var selectedFilter by remember { mutableStateOf("all") }
+
+    val filteredEvents = remember(selectedFilter, events) {
+        when (selectedFilter) {
+            "hackathons" -> events.filter { it.type == "event" || it.title.contains("hackathon", ignoreCase = true) }
+            "exams" -> events.filter { it.type == "exam" || it.type == "fee" }
+            else -> events
+        }
+    }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .shadow(
+                elevation = 6.dp,
+                shape = RoundedCornerShape(24.dp),
+                spotColor = Color(0x1A0F172A)
+            ),
+        shape = RoundedCornerShape(24.dp),
+        color = SurfaceCard,
+        border = BorderStroke(1.dp, BorderSubtle)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFEEF2FF)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.EmojiEvents,
+                            contentDescription = null,
+                            tint = BrandIndigo,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            text = "Saved Tech Events & Deadlines",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = "Hackathons, Exams & Fee Reminders",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = TextSecondary
+                        )
+                    }
+                }
+
+                Surface(
+                    color = Color(0xFFF1F5F9),
+                    shape = CircleShape
+                ) {
+                    Text(
+                        text = "${events.size} Saved",
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = BrandIndigo
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                TrackerFilterChip("All Events (${events.size})", selectedFilter == "all") { selectedFilter = "all" }
+                TrackerFilterChip("Hackathons 🚀", selectedFilter == "hackathons") { selectedFilter = "hackathons" }
+                TrackerFilterChip("Exams & Fees 📝", selectedFilter == "exams") { selectedFilter = "exams" }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                filteredEvents.forEach { event ->
+                    SavedEventCard(
+                        event = event,
+                        onSyncCalendar = { onSyncCalendar(event) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TrackerFilterChip(
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Surface(
+        shape = CircleShape,
+        color = if (isSelected) BrandIndigo else Color(0xFFF1F5F9),
+        modifier = Modifier.clickable { onClick() }
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+            color = if (isSelected) Color.White else TextSecondary
+        )
+    }
+}
+
+@Composable
+fun SavedEventCard(
+    event: NoticeData,
+    onSyncCalendar: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = Color(0xFFF8FAFC),
+        border = BorderStroke(1.dp, Color(0xFFE2E8F0))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val icon = when (event.type.lowercase()) {
+                    "event" -> Icons.Default.RocketLaunch
+                    "fee" -> Icons.Default.Payments
+                    "exam" -> Icons.Default.Assignment
+                    else -> Icons.Default.Event
+                }
+                val iconBg = when (event.type.lowercase()) {
+                    "event" -> Color(0xFFEEF2FF)
+                    "fee" -> Color(0xFFECFDF5)
+                    "exam" -> Color(0xFFFEF2F2)
+                    else -> Color(0xFFF1F5F9)
+                }
+                val iconTint = when (event.type.lowercase()) {
+                    "event" -> BrandIndigo
+                    "fee" -> FeeEmerald
+                    "exam" -> Color(0xFFEF4444)
+                    else -> TextSecondary
+                }
+
+                Box(
+                    modifier = Modifier
+                        .size(38.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(iconBg),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = iconTint,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column {
+                    Text(
+                        text = event.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary,
+                        maxLines = 1
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarToday,
+                            contentDescription = null,
+                            tint = TextSecondary,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "${event.date ?: "TBD"} ${event.time ?: ""}".trim(),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = TextSecondary,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = Color.White,
+                border = BorderStroke(1.dp, BrandIndigo.copy(alpha = 0.3f)),
+                modifier = Modifier.clickable { onSyncCalendar() }
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.EditCalendar,
+                        contentDescription = "Sync",
+                        tint = BrandIndigo,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Sync",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = BrandIndigo
+                    )
+                }
+            }
+        }
+    }
+}
+
 
 
 
