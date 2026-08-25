@@ -1,89 +1,75 @@
-# 📌 Notice Sorter — iQOO Hackathon (Smart Education Track)
+# 🏛️ College OS & Notice Sorter — iQOO Hackathon (Smart Education Track)
 
-> **Extending iQOO OriginOS AI Vision**: Moving from *reading* on-screen text (AI Screen Translation & DocMaster) to **acting on what it means**.
+> **All-In-One Campus Digital Operating System + OriginOS Vision AI**: Bringing academic management, campus social networking, and **AI-powered Notice-to-Calendar automation** into one unified student platform.
 
 ---
 
 ## 📖 Executive Summary
 
-In Indian higher education, critical academic updates — exam schedules, tuition fee deadlines, lab slot reschedules, hackathon announcements, and administrative circulars — are overwhelmingly distributed as image screenshots or PDFs inside crowded WhatsApp groups.
+**College OS** is a multi-tenant, enterprise-grade digital operating system built for Indian higher education institutions. It connects students, faculty, campus clubs, and ERP systems into a seamless digital ecosystem.
 
-**The Problem**:
-- Students receive dozens of messages daily. Important dates get buried in media galleries.
-- Manual entry into calendar apps requires switching apps, copy-pasting text, manually setting dates/times, and configuring reminders — creating high friction.
-- Result: Missed exam deadlines, late fee penalties, and unnecessary academic stress.
-
-**The Solution — Notice Sorter**:
-Notice Sorter is a native Android application built specifically for **iQOO's OriginOS ecosystem**. It allows students to simply **Share** any notice image or PDF directly from WhatsApp or Files. In less than 3 seconds, Notice Sorter extracts the text using **on-device Google ML Kit OCR**, understands the context via **Gemini 1.5 Flash LLM**, renders a beautiful **Material 3 result card**, and pre-fills the **native Android Calendar with a 24-hour reminder in one tap**.
+Integrated at the heart of College OS is **Notice Sorter** — an AI-powered OriginOS feature built specifically for the iQOO Hackathon. It solves the everyday student struggle of missed deadlines buried in WhatsApp groups by extracting dates, deadlines, and action items from notice photos/PDFs and syncing them to the native phone calendar in **one tap**.
 
 ---
 
-## ✨ Key Features & Capabilities
+## ✨ System Architecture & Modules
 
-### ⚡ 1. Direct System Share Sheet Integration (`ACTION_SEND` & `ACTION_SEND_MULTIPLE`)
-- Appears seamlessly in the native Android share menu when sharing images (`image/*`) or PDF documents (`application/pdf`) directly from WhatsApp, Telegram, Gallery, or Files.
-- Zero app-switching friction: Users stay in their primary workflow.
-
-### 🔍 2. On-Device ML Kit OCR & PDF Rendering
-- High-speed text extraction powered by **Google ML Kit Text Recognition**.
-- Includes a native `PdfRenderer` engine that converts PDF document pages to bitmaps on-the-fly for OCR processing.
-- Fully private and local text scanning before structured LLM context processing.
-
-### 🧠 3. AI Context Understanding (Gemini 1.5 Flash)
-- Converts raw, unstructured OCR text into a validated JSON payload containing:
-  - **Notice Title**: Concise summary of the notice.
-  - **Actionable Date**: Target deadline formatted as `YYYY-MM-DD`.
-  - **Event Time**: Exact time formatted as `HH:MM` in 24hr format.
-  - **Notice Category**: `exam` | `fee` | `event` | `circular` | `other`.
-  - **Action Needed**: One clear sentence describing what the student must do.
-  - **Confidence Rating**: `high` vs `low` detection flag.
-
-### 🎨 4. OriginOS Positive Design System
-- Custom palette designed specifically for a soothing, positive student experience:
-  - 🔘 **Slate Blue** (`#5E7892`): Primary accents & top bar gradient.
-  - 🏐 **Soft Steel** (`#A7B7C6`): Secondary labels & status indicators.
-  - 🌾 **Warm Cream** (`#F3EFDF`): App background for eye comfort.
-  - 🌿 **Sage Green** (`#BDCFAA`): Positive action cards.
-  - 🌲 **Muted Moss** (`#8E9E83`): Success state confirmations.
-
-### ✏️ 5. Interactive "Trust & Verify" Card UI
-- Every field (Title, Date, Time, Category, Action) is **tappable and editable** via Material 3 dialogs (`EditTitleDialog`, `EditDateDialog`, `EditTimeDialog`, `EditTypeDialog`, `EditActionDialog`).
-- **Low-Confidence Handling**: If OCR/LLM date detection is ambiguous, a yellow warning banner (*"Unclear date in notice image. Tap date block to fix."*) highlights the date field for quick verification.
-
-### 📅 6. One-Tap Native Calendar Sync (`CalendarContract.Events`)
-- Integrates with Android's system calendar via `Intent.ACTION_INSERT` (`CalendarContract.Events.CONTENT_URI`).
-- **Zero Runtime Permissions**: Does not demand invasive read/write calendar permissions, ensuring 100% compatibility with OEM calendar apps (OriginOS / FTouchOS).
-- Automatically configures:
-  - Pre-filled Event Title & Action Description.
-  - Start & End times (or All-Day event if time is unspecified).
-  - Pre-configured **24-hour reminder alarm**.
-
-### 📱 7. App-Drawer Launch Mode & Drag-and-Drop Drop Zone
-- When launched directly from the app drawer (outside WhatsApp), Notice Sorter features:
-  - **Digitize Your Notice Card**: Interactive upload button & Drag-and-Drop drop zone for picking local photos/PDFs.
-  - **Hackathon Demo Chips**: Instant one-tap sample notice presets (`Exam Notice`, `Fee Circular`, `Event`, `Needs Date`) for live stage demonstrations.
-
-### 🏆 8. Saved Tech Events & Hackathons Tracker
-- Dedicated in-app feed (**"Saved Tech Events & Deadlines"**) designed for students to track all upcoming hackathon slots, tech fest deadlines, exams, and fee schedules in one central hub.
-- Features filter chips: **`All Events`**, **`Hackathons 🚀`**, and **`Exams & Fees 📝`**.
-- Every saved event card includes a **1-tap "Sync"** button to push deadlines to the native phone calendar instantly.
+```
+                        ┌──────────────────────────────────────────┐
+                        │          College OS Platform             │
+                        └────────────────────┬─────────────────────┘
+                                             │
+      ┌──────────────────────┬───────────────┴──────────────┬──────────────────────┐
+      │                      │                              │                      │
+┌─────┴──────────┐   ┌───────┴────────┐            ┌────────┴─────────┐   ┌────────┴─────────┐
+│ Android App    │   │ Next.js Admin  │            │ NestJS Backend   │   │  AI Notice       │
+│ (Kotlin/Compose│   │ Dashboard      │            │ (Prisma / Redis) │   │  Sorter Engine   │
+└────────────────┘   └────────────────┘            └──────────────────┘   └──────────────────┘
+```
 
 ---
 
-## 🎯 Strategic Fit for iQOO & OriginOS
+## 🚀 Key Features & Capabilities
 
-Notice Sorter was designed to complement and extend iQOO's flagship OS capabilities:
+### 📱 1. Android Mobile App (College OS Native)
+- **Unified Campus Dashboard**: Real-time attendance percentage (+3 classes margin indicator), today's class schedule & room allocations, upcoming midterm dates, and recent announcements.
+- **AI Notice Sorter & Calendar Sync**: 
+  - Receives notice images or PDFs directly from WhatsApp, Telegram, Gallery, or Files via `ACTION_SEND` and `ACTION_SEND_MULTIPLE`.
+  - **Google ML Kit Text Recognition** for instant on-device OCR and native PDF page rendering.
+  - **Gemini 1.5 Flash AI** for context extraction (Title, Date, Time, Category, Action Required, Confidence Level).
+  - **Interactive "Trust & Verify" Card**: Tappable fields with date/time pickers and low-confidence warning banners.
+  - **1-Tap Native Calendar Sync**: Uses `Intent.ACTION_INSERT` (`CalendarContract.Events`) to set calendar events with a pre-configured 24-hour reminder — zero runtime permissions required.
+- **Academics Portal**: Attendance breakdown per subject, assignment submission deadlines, SGPA/CGPA credit tracking, and weekly timetables.
+- **Campus Social & Verified Clubs**: Verified student club portals, community discussions, faculty advisor contacts, and event registrations.
+- **Profile & Identity**: Verified student USN, academic department, ERP sync status, and SHA-256 token security rotation.
 
-| OriginOS Feature | Traditional Scope | Notice Sorter Extension |
+### 💻 2. Web Admin Dashboard (`admin/`)
+- Built with **Next.js 14, React, Tailwind CSS, and TypeScript**.
+- Multi-tenant institutional management for college administrators, department heads, and faculty advisors.
+- ERP & LMS synchronization control panel with circuit breaker resilience monitoring.
+
+### ⚙️ 3. Enterprise Backend (`backend/`)
+- Built with **NestJS, TypeScript, Prisma ORM, and PostgreSQL / Redis**.
+- Multi-tenant architecture with tenant isolation.
+- Attribute-Based Access Control (ABAC) and Role-Based Access Control (RBAC).
+- REST API conventions, WebSockets gateway for real-time campus messaging, and health check endpoints.
+
+---
+
+## 🎯 Strategic Alignment with iQOO & OriginOS
+
+Notice Sorter in College OS extends iQOO's flagship OriginOS capabilities:
+
+| OriginOS Feature | Traditional Scope | College OS & Notice Sorter Extension |
 |---|---|---|
-| **AI Screen Translation** | Translates foreign text on screen | **Acts on translated academic text** by creating scheduled calendar reminders. |
-| **DocMaster** | Scans and stores physical document PDFs | **Extracts structured deadlines** from scanned PDFs and adds them to student schedules. |
+| **AI Screen Translation** | Translates foreign text on screen | **Acts on translated academic text** by automatically scheduling calendar reminders for exams & fees. |
+| **DocMaster** | Scans and stores physical document PDFs | **Extracts structured deadlines** from scanned notice PDFs and adds them to student schedules. |
 | **Atomic Components** | Glanceable widgets for system status | Provides actionable atomic event creation directly from system share sheets. |
-| **Office Kit** | Productivity suite for documents & notes | Integrates smart notice digitization into student productivity workflows. |
+| **Office Kit** | Productivity suite for documents & notes | Integrates smart notice digitization into everyday student workflows. |
 
 ---
 
-## 🏗️ System Architecture & Data Lifecycle
+## 🏗️ Notice Sorter Data Lifecycle
 
 ```mermaid
 sequenceDiagram
@@ -129,19 +115,11 @@ sequenceDiagram
 }
 ```
 
-### Schema Description:
-- `title` (*String*): Short, descriptive title derived from notice heading.
-- `date` (*String, YYYY-MM-DD*): Primary actionable date.
-- `time` (*String, HH:MM or null*): Event start time in 24-hour format.
-- `type` (*Enum*): Category tag — `exam` | `fee` | `event` | `circular` | `other`.
-- `action_needed` (*String*): Concise single-sentence student instruction.
-- `confidence` (*Enum*): `high` (explicit date detected) | `low` (ambiguous date / user verification advised).
-
 ---
 
 ## 🧪 Empirical Benchmarks & Test Results
 
-Tested against real forwarded notice images and PDFs collected from Indian university WhatsApp groups:
+Tested against 12 real notice images and PDFs collected from Indian university WhatsApp groups:
 
 | Notice Category | Samples Tested | Extraction Accuracy | Date Detection | Average Processing Time |
 |---|---|---|---|---|
@@ -154,67 +132,61 @@ Tested against real forwarded notice images and PDFs collected from Indian unive
 
 ---
 
-## 🛠️ Tech Stack & Dependencies
+## 🛠️ Repository Structure
 
-- **Language**: Kotlin `1.9.22`
-- **UI Framework**: Android Jetpack Compose + Material 3 (`2024.02.01` BOM)
-- **Min SDK**: API level 24 (Android 7.0+)
-- **Target SDK**: API level 34 (Android 14)
-- **Build System**: Gradle `8.14` + AGP `8.5.0`
-- **JDK Compatibility**: Java 17 / Java 25 (JBR)
-- **ML & Vision**: `com.google.android.gms:play-services-mlkit-text-recognition:19.0.0`
-- **AI Backend**: `com.google.ai.client.generativeai:generativeai:0.2.2` (Gemini 1.5 Flash)
-- **Serialization**: `kotlinx-serialization-json:1.6.3`
-- **Async Runtime**: `kotlinx-coroutines-play-services:1.8.0`
+```
+iqoo/
+├── android/               # Native Android App (Kotlin, Jetpack Compose, Material 3)
+│   └── app/               # Main Application Module (com.collegeos)
+├── admin/                 # Next.js 14 Admin Dashboard (TypeScript, Tailwind CSS)
+├── backend/               # NestJS Enterprise API Backend (Prisma, PostgreSQL, Redis)
+├── docs/                  # System Architecture, Security, API & Database Docs
+├── scripts/               # Development & Setup Scripts (setup.sh / setup.ps1)
+├── build.gradle.kts       # Root Gradle Build Configuration
+├── settings.gradle.kts    # Root Gradle Settings
+├── docker-compose.yml     # Local Development Stack (PostgreSQL, Redis)
+└── Makefile               # Developer Automation Commands
+```
 
 ---
 
-## 🚀 Setup & Installation Instructions
+## 🚀 Quick Setup Instructions
 
-### Prerequisites:
-- Android Studio Jellyfish / Koala / Ladybug (or newer)
-- Android SDK 34
-- JDK 17 (or bundled Android Studio JBR)
-
-### Steps:
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/cooldude698/iqoo.git
-   cd iqoo
-   ```
-
-2. **Configure Gemini API Key**:
-   Create or edit `local.properties` in the project root directory:
+### Android App:
+1. Open the project in Android Studio.
+2. Ensure `local.properties` contains your SDK directory and Gemini API Key:
    ```properties
    sdk.dir=/Users/YOUR_USER/Library/Android/sdk
    GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
    ```
+3. Run `./gradlew assembleDebug` or click **Run (Play ▶)** on an Android Emulator (Pixel 7 API 34).
 
-3. **Build & Run**:
-   - Open the project in Android Studio.
-   - Select `app` run configuration and target an Android Emulator (Pixel 7 API 34) or connected physical iQOO device.
-   - Click **Run (Play ▶)**.
+### Admin Dashboard (`admin/`):
+```bash
+cd admin
+npm install
+npm run dev
+```
+
+### Backend (`backend/`):
+```bash
+cd backend
+npm install
+npx prisma db push
+npm run start:dev
+```
 
 ---
 
-## 🗺️ Project Roadmap & Future Scope
+## 👥 Team & Authors
 
-- [x] **Phase 1 (MVP)**: Share Intent Receiver, ML Kit OCR Engine, Gemini Extraction, Material 3 Result Card, Calendar Intent.
-- [x] **Phase 2 (Polish)**: Low-confidence warning banners, interactive field editing dialogs, post-calendar confirmation, drag-and-drop file drop zone.
-- [ ] **Phase 3 (On-Device LLM)**: Integration with **Gemini Nano / MediaPipe LLM Inference Engine** for 100% offline text understanding.
-- [ ] **Phase 4 (Batch Timetables)**: Multi-page timetable PDF extraction generating recurring calendar event series for entire academic semesters.
-- [ ] **Phase 5 (OriginOS Atomic Widget)**: Native OriginOS Atomic Widget displaying upcoming notice deadlines on the home screen.
-
----
-
-## 👥 Team & Contributions
-
-- **Aman Jain** ([@cooldude698](https://github.com/cooldude698)) — *App UI, Share Intent Receiver, Calendar Integration, Design System & Demo Owner*
+- **Aman Jain** ([@cooldude698](https://github.com/cooldude698)) — *Android App UI, Share Intent Receiver, Calendar Integration, Design System & Pitch Owner*
+- **Hitarth Kothari** ([@hitarthkothari9641-coder](https://github.com/hitarthkothari9641-coder)) — *Full-Stack Platform Architecture, Backend API, Admin Dashboard & Infrastructure*
 - **Prit Thacker** ([@imagine1phoenix](https://github.com/imagine1phoenix)) — *OCR Engine, Gemini LLM Pipeline & Structured Parsing*
 
 ---
 
 <p align="center">
-  <b>Notice Sorter — iQOO Hackathon (Smart Education Track)</b><br>
+  <b>College OS & Notice Sorter — iQOO Hackathon 2026 (Smart Education Track)</b><br>
   <i>"From reading on-screen text to acting on what it means."</i>
 </p>
