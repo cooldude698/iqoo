@@ -1,6 +1,14 @@
 package com.collegeos.core.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,38 +18,57 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Class
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -59,7 +86,6 @@ import com.collegeos.feature.social.ui.SocialScreen
 fun MainAppScreen(
     initialSharedUri: String? = null
 ) {
-    // Default to Notice Sorter tab (1) if opened via WhatsApp share intent
     var selectedTab by remember { mutableIntStateOf(if (initialSharedUri != null) 1 else 0) }
     val academicsViewModel = remember { AcademicsViewModel() }
     val socialViewModel = remember { SocialViewModel() }
@@ -72,17 +98,74 @@ fun MainAppScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Column {
-                        Text(
-                            text = Constants.APP_NAME,
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = Constants.APP_TAGLINE,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        colors = listOf(Color(0xFF4F46E5), Color(0xFF3B82F6))
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.School,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = Constants.APP_NAME,
+                                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Icon(
+                                    imageVector = Icons.Filled.Verified,
+                                    contentDescription = "Verified",
+                                    tint = Color(0xFF4F46E5),
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                            Text(
+                                text = Constants.APP_TAGLINE,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    Surface(
+                        color = Color(0xFFECFDF5),
+                        shape = CircleShape,
+                        border = BorderStroke(1.dp, Color(0xFFA7F3D0)),
+                        modifier = Modifier.padding(end = 12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .background(Color(0xFF10B981), CircleShape)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "ERP SYNCED",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF047857),
+                                fontSize = 10.sp
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -91,35 +174,38 @@ fun MainAppScreen(
             )
         },
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
                 NavigationBarItem(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
-                    label = { Text("Home") },
+                    label = { Text("Home", fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Normal) },
                     icon = { Icon(Icons.Filled.Home, contentDescription = "Home") }
                 )
                 NavigationBarItem(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    label = { Text("Notice Sorter") },
-                    icon = { Icon(Icons.Filled.AutoAwesome, contentDescription = "Notice Sorter") }
+                    label = { Text("Notice Sorter", fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Normal) },
+                    icon = { Icon(Icons.Filled.AutoAwesome, contentDescription = "Notice Sorter", tint = if (selectedTab == 1) Color(0xFF4F46E5) else MaterialTheme.colorScheme.onSurfaceVariant) }
                 )
                 NavigationBarItem(
                     selected = selectedTab == 2,
                     onClick = { selectedTab = 2 },
-                    label = { Text("Academics") },
+                    label = { Text("Academics", fontWeight = if (selectedTab == 2) FontWeight.Bold else FontWeight.Normal) },
                     icon = { Icon(Icons.Filled.School, contentDescription = "Academics") }
                 )
                 NavigationBarItem(
                     selected = selectedTab == 3,
                     onClick = { selectedTab = 3 },
-                    label = { Text("Clubs") },
+                    label = { Text("Clubs", fontWeight = if (selectedTab == 3) FontWeight.Bold else FontWeight.Normal) },
                     icon = { Icon(Icons.Filled.Groups, contentDescription = "Clubs") }
                 )
                 NavigationBarItem(
                     selected = selectedTab == 4,
                     onClick = { selectedTab = 4 },
-                    label = { Text("Profile") },
+                    label = { Text("Profile", fontWeight = if (selectedTab == 4) FontWeight.Bold else FontWeight.Normal) },
                     icon = { Icon(Icons.Filled.Person, contentDescription = "Profile") }
                 )
             }
@@ -160,77 +246,205 @@ fun UnifiedDashboardScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Feature Banner: AI Notice Sorter & Calendar Sync
+        // 1. Hero Feature Banner: AI Notice Sorter & OriginOS AI Vision
+        item {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                shadowElevation = 6.dp,
+                color = Color.Transparent
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(Color(0xFF1E1B4B), Color(0xFF312E81), Color(0xFF4338CA))
+                            )
+                        )
+                        .padding(20.dp)
+                ) {
+                    Column {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Surface(
+                                color = Color(0xFF22C55E).copy(alpha = 0.2f),
+                                shape = CircleShape,
+                                border = BorderStroke(1.dp, Color(0xFF4ADE80))
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(8.dp)
+                                            .background(Color(0xFF22C55E), CircleShape)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "OriginOS AI Vision Active",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF86EFAC),
+                                        fontSize = 11.sp
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                text = "v1.0.0 Live",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFFA5B4FC)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = "Welcome back, Alex Chen! 👋",
+                            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                            color = Color.White
+                        )
+                        Text(
+                            text = "Share any college notice photo or PDF from WhatsApp into Notice Sorter to extract deadlines and sync them to your phone calendar in 1 tap.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color(0xFFE0E7FF),
+                            lineHeight = 20.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(
+                            onClick = onNavigateToNoticeSorter,
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6366F1)),
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(Icons.Filled.AutoAwesome, contentDescription = null, tint = Color.White)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                "Open AI Notice Sorter & Calendar Sync",
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. Today's Class Schedule (6 Classes Timeline)
+        item {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Filled.Class, contentDescription = null, tint = Color(0xFF4F46E5), modifier = Modifier.size(22.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Today's Schedule (6 Classes)",
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "Wednesday",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+        }
+
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                shape = RoundedCornerShape(16.dp)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(18.dp),
+                border = BorderStroke(1.dp, Color(0xFFE2E8F0))
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    // Class 1 (NOW)
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .height(10.dp)
-                                .width(10.dp)
-                                .background(Color(0xFF22C55E), shape = RoundedCornerShape(5.dp))
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "OriginOS AI Vision Active",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
+                        Surface(color = Color(0xFFEEF2FF), shape = RoundedCornerShape(8.dp)) {
+                            Text("NOW • 09:00", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.Bold, color = Color(0xFF4F46E5), fontSize = 11.sp)
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("CS301 • Data Structures & Algorithms", fontWeight = FontWeight.Bold)
+                            Text("Lab 2 • Dr. Rajesh Kumar", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                        }
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    // Class 2
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(color = Color(0xFFF1F5F9), shape = RoundedCornerShape(8.dp)) {
+                            Text("10:15 AM", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.SemiBold, color = Color(0xFF475569), fontSize = 11.sp)
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("CS302 • Database Management Systems", fontWeight = FontWeight.Bold)
+                            Text("LH 104 • Prof. Ananya Sharma", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                        }
+                    }
 
-                    Text(
-                        text = "Welcome back, Alex Chen! Share any college notice image or PDF from WhatsApp into Notice Sorter to extract deadlines and sync them to your calendar in 1 tap.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                    // Class 3
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(color = Color(0xFFF1F5F9), shape = RoundedCornerShape(8.dp)) {
+                            Text("11:30 AM", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.SemiBold, color = Color(0xFF475569), fontSize = 11.sp)
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("MA301 • Linear Algebra & Probability", fontWeight = FontWeight.Bold)
+                            Text("LH 201 • Dr. V. K. Raman", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                        }
+                    }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    // Class 4
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(color = Color(0xFFF1F5F9), shape = RoundedCornerShape(8.dp)) {
+                            Text("01:30 PM", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.SemiBold, color = Color(0xFF475569), fontSize = 11.sp)
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("EC204 • Digital Systems & Microprocessors", fontWeight = FontWeight.Bold)
+                            Text("Micro Lab • Prof. S. N. Roy", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                        }
+                    }
 
-                    Button(
-                        onClick = onNavigateToNoticeSorter,
+                    // Class 5
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(color = Color(0xFFF1F5F9), shape = RoundedCornerShape(8.dp)) {
+                            Text("02:45 PM", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.SemiBold, color = Color(0xFF475569), fontSize = 11.sp)
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("CS305 • Operating Systems & Kernel", fontWeight = FontWeight.Bold)
+                            Text("LH 102 • Dr. Meera Joshi", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                        }
+                    }
+
+                    // Class 6
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(color = Color(0xFFF1F5F9), shape = RoundedCornerShape(8.dp)) {
+                            Text("04:00 PM", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.SemiBold, color = Color(0xFF475569), fontSize = 11.sp)
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("AI401 • Machine Learning & Neural Nets", fontWeight = FontWeight.Bold)
+                            Text("AI Studio • Dr. Vikram Seth", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+                    OutlinedButton(
+                        onClick = onNavigateToAcademics,
+                        modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Icon(Icons.Filled.AutoAwesome, contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Open AI Notice Sorter & Calendar Sync")
+                        Text("View Full Weekly Timetable & Room Map")
                     }
                 }
             }
         }
 
-        item {
-            Text(
-                text = "Today's Class Schedule (4 Classes)",
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            )
-        }
-
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("NOW: CS301 • Data Structures & Algorithms", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                    Text("Time: 09:00 AM - 10:00 AM | Room: CS Lab 2 | Dr. Rajesh Kumar")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("NEXT: CS302 • Database Management Systems (10:15 AM @ LH 104)")
-                    Text("THEN: MA301 • Linear Algebra (11:30 AM @ LH 201)")
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Button(onClick = onNavigateToAcademics) {
-                        Text("View Full Weekly Timetable & Rooms")
-                    }
-                }
-            }
-        }
-
+        // 3. Academic & Attendance Overview Grid (4 Cards)
         item {
             Text(
                 text = "Academic & Attendance Overview",
@@ -239,70 +453,157 @@ fun UnifiedDashboardScreen(
         }
 
         item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Card(
-                        modifier = Modifier.weight(1f),
-                        onClick = onNavigateToAcademics
+                        modifier = Modifier.weight(1f).clickable { onNavigateToAcademics() },
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, Color(0xFFE2E8F0))
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("📊 Attendance", fontWeight = FontWeight.Bold)
-                            Text("90.8% Overall", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                            Text("Safe (+3 classes margin)", style = MaterialTheme.typography.labelSmall)
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("📊 Attendance", fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text("90.8%", color = Color(0xFF10B981), fontWeight = FontWeight.Bold)
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            LinearProgressIndicator(progress = { 0.908f }, modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape), color = Color(0xFF10B981))
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text("Safe (+5 classes margin)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
                         }
                     }
+
                     Card(
-                        modifier = Modifier.weight(1f),
-                        onClick = onNavigateToAcademics
+                        modifier = Modifier.weight(1f).clickable { onNavigateToAcademics() },
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, Color(0xFFE2E8F0))
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("📝 Assignments", fontWeight = FontWeight.Bold)
-                            Text("2 Pending", color = Color(0xFFEAB308), fontWeight = FontWeight.Bold)
-                            Text("B-Tree Due Tomorrow", style = MaterialTheme.typography.labelSmall)
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("📝 Assignments", fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text("4 Due", color = Color(0xFFD97706), fontWeight = FontWeight.Bold)
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            LinearProgressIndicator(progress = { 0.5f }, modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape), color = Color(0xFFD97706))
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text("B-Tree Due Tomorrow", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
                         }
                     }
                 }
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Card(
-                        modifier = Modifier.weight(1f),
-                        onClick = onNavigateToSocial
+                        modifier = Modifier.weight(1f).clickable { onNavigateToSocial() },
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, Color(0xFFE2E8F0))
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("💬 Campus Social", fontWeight = FontWeight.Bold)
-                            Text("4 New Updates", fontWeight = FontWeight.Bold)
-                            Text("TechFest 2026 Open", style = MaterialTheme.typography.labelSmall)
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("💬 Campus Social", fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text("12 New", color = Color(0xFF8B5CF6), fontWeight = FontWeight.Bold)
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text("TechFest & Coding Club", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
                         }
                     }
+
                     Card(
-                        modifier = Modifier.weight(1f),
-                        onClick = onNavigateToNoticeSorter
+                        modifier = Modifier.weight(1f).clickable { onNavigateToNoticeSorter() },
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, Color(0xFFE2E8F0))
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("🚀 Tech Deadlines", fontWeight = FontWeight.Bold)
-                            Text("4 Events Saved", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                            Text("iQOO Hackathon Aug 30", style = MaterialTheme.typography.labelSmall)
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("🚀 Hackathons", fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text("6 Tracked", color = Color(0xFF4F46E5), fontWeight = FontWeight.Bold)
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text("iQOO Hackathon Aug 30", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
                         }
                     }
                 }
             }
         }
 
+        // 4. Upcoming Hackathons & Tech Events (5 Hackathons Cards)
         item {
-            Text(
-                text = "Upcoming Midterm Examinations & Hackathons",
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Filled.EmojiEvents, contentDescription = null, tint = Color(0xFFD97706), modifier = Modifier.size(22.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Upcoming Midterm Exams & Hackathons",
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                )
+            }
         }
 
         item {
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("🏆 iQOO City Battle Hackathon 2026", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                    Text("Date: Aug 30, 2026 @ 10:00 AM | Track: Smart Education")
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text("CS301 Data Structures & Algorithms Midterm", fontWeight = FontWeight.Bold)
-                    Text("Date: Oct 12, 2026 @ 10:00 AM | Hall: Exam Center 1 | Max Marks: 100")
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                // Hackathon 1
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFEEF2FF)),
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(1.dp, Color(0xFFC7D2FE))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("🏆 iQOO OriginOS City Battle Hackathon 2026", fontWeight = FontWeight.Bold, color = Color(0xFF4F46E5))
+                            Spacer(modifier = Modifier.weight(1f))
+                            Surface(color = Color(0xFF4F46E5), shape = CircleShape) {
+                                Text("Aug 30", modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("Date: Aug 30, 2026 @ 10:00 AM | Track: Smart Education | Prize Pool: ₹1,00,000", style = MaterialTheme.typography.bodySmall, color = Color(0xFF374151))
+                    }
+                }
+
+                // Hackathon 2
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(1.dp, Color(0xFFE2E8F0))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("🚀 Smart India Hackathon 2026 — State Finals", fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.weight(1f))
+                            Surface(color = Color(0xFF10B981), shape = CircleShape) {
+                                Text("Sep 15", modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("Date: Sep 15, 2026 @ 09:00 AM | Problem Statement Submission Open", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                    }
+                }
+
+                // Hackathon 3
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(1.dp, Color(0xFFE2E8F0))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("⚡ Google Cloud Generative AI CodeSprint", fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.weight(1f))
+                            Surface(color = Color(0xFF2563EB), shape = CircleShape) {
+                                Text("Sep 22", modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("Date: Sep 22, 2026 @ 11:00 AM | Vertex AI & Gemini Nano Track", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                    }
                 }
             }
         }
@@ -315,7 +616,7 @@ fun CommunitiesAndClubsScreen(socialState: com.collegeos.feature.social.SocialSt
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         item {
             Text(
@@ -335,20 +636,34 @@ fun CommunitiesAndClubsScreen(socialState: com.collegeos.feature.social.SocialSt
         }
 
         items(socialState.clubs) { club ->
-            Card(modifier = Modifier.fillMaxWidth()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(club.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.weight(1f))
-                        Text("✓ Approved", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelSmall)
+                        Surface(color = Color(0xFFECFDF5), shape = CircleShape, border = BorderStroke(1.dp, Color(0xFFA7F3D0))) {
+                            Text("✓ Verified Club", color = Color(0xFF047857), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp))
+                        }
                     }
-                    Text("Category: ${club.category} | ${club.membersCount} Active Members", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(club.description)
-                    Text("Faculty Advisor: ${club.facultyAdvisor}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.tertiary)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedButton(onClick = {}) {
-                        Text("View Club Portal & Events")
+                    Text("Category: ${club.category} • ${club.membersCount} Active Members", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(club.description, style = MaterialTheme.typography.bodyMedium)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text("Faculty Advisor: ${club.facultyAdvisor}", style = MaterialTheme.typography.labelSmall, color = Color(0xFF4F46E5), fontWeight = FontWeight.SemiBold)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Button(
+                        onClick = {},
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4F46E5)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("View Club Portal & Join Events")
                     }
                 }
             }
@@ -360,17 +675,25 @@ fun CommunitiesAndClubsScreen(socialState: com.collegeos.feature.social.SocialSt
         }
 
         items(socialState.communities) { comm ->
-            Card(modifier = Modifier.fillMaxWidth()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(comm.name, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.weight(1f))
                         if (comm.isJoined) {
-                            Text("Joined ✓", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelSmall)
+                            Surface(color = Color(0xFFEEF2FF), shape = CircleShape) {
+                                Text("Joined ✓", color = Color(0xFF4F46E5), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp))
+                            }
                         }
                     }
-                    Text(comm.description)
                     Spacer(modifier = Modifier.height(4.dp))
+                    Text(comm.description, style = MaterialTheme.typography.bodySmall)
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text("${comm.membersCount} Members • ${comm.category}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
                 }
             }
@@ -395,27 +718,64 @@ fun ProfileAndSettingsScreen() {
         }
 
         item {
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Alex Chen", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold))
-                    Text("Student USN: 2024CS108 • Verified Student ✓", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("Department: Department of Computer Science & Engineering")
-                    Text("Program: B.Tech Computer Science & Engineering")
-                    Text("Current Academic Year: 2nd Year (Semester 3)")
-                    Text("Cumulative GPA (CGPA): 8.92 / 10.0")
-                    Text("Earned Credits: 64 / 160 Credits")
-                    Text("Institutional Email: alex.chen@campus.edu")
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = BorderStroke(1.dp, Color(0xFFE2E8F0))
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF4F46E5)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("AC", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        }
+                        Spacer(modifier = Modifier.width(14.dp))
+                        Column {
+                            Text("Alex Chen", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("USN: 2024CS108", color = Color(0xFF4F46E5), fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Icon(Icons.Filled.Verified, contentDescription = null, tint = Color(0xFF4F46E5), modifier = Modifier.size(16.dp))
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    HorizontalDivider(color = Color(0xFFE2E8F0))
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text("Department: Department of Computer Science & Engineering", style = MaterialTheme.typography.bodyMedium)
+                    Text("Program: B.Tech Computer Science & Engineering", style = MaterialTheme.typography.bodyMedium)
+                    Text("Current Academic Year: 2nd Year (Semester 3)", style = MaterialTheme.typography.bodyMedium)
+                    Text("Cumulative GPA (CGPA): 8.92 / 10.0", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Color(0xFF10B981))
+                    Text("Earned Credits: 94 / 160 Required Credits", style = MaterialTheme.typography.bodyMedium)
+                    Text("Institutional Email: alex.chen@campus.edu", style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
 
         item {
-            Card(modifier = Modifier.fillMaxWidth()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = BorderStroke(1.dp, Color(0xFFE2E8F0))
+            ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Campus ERP Integration Status", fontWeight = FontWeight.Bold)
-                    Text("Provider: Mock ERP Provider v2.1", color = MaterialTheme.colorScheme.onSurface)
-                    Text("Status: CONNECTED & SYNCED", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Sync, contentDescription = null, tint = Color(0xFF10B981))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Campus ERP Integration Status", fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Provider: Enterprise Campus ERP Connector v2.4", color = MaterialTheme.colorScheme.onSurface)
+                    Text("Status: CONNECTED & SYNCED", color = Color(0xFF10B981), fontWeight = FontWeight.Bold)
                     Text("Last Incremental Sync: Today @ 23:25")
                     Text("Circuit Breaker Status: CLOSED (Healthy 100%)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
                 }
@@ -423,12 +783,22 @@ fun ProfileAndSettingsScreen() {
         }
 
         item {
-            Card(modifier = Modifier.fillMaxWidth()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = BorderStroke(1.dp, Color(0xFFE2E8F0))
+            ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Security & Privacy Settings", fontWeight = FontWeight.Bold)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Security, contentDescription = null, tint = Color(0xFF4F46E5))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Security & Privacy Settings", fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text("Social Visibility: COLLEGE (Campus Scoped)")
                     Text("Token Refresh Engine: SHA-256 Rotation Active")
-                    Text("Multi-Factor Authentication: Enabled")
+                    Text("Multi-Factor Authentication: Enabled ✓")
                 }
             }
         }
