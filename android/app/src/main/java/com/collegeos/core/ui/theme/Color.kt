@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 // ==============================================================================
-// Editorial Campus Palette — Clean, Premium, Minimal, Academic, Modern, Human
+// $1,000,000 Luxury Editorial Campus Palette — Premium, Ultra-Modern, Unique
 // ==============================================================================
 
 // Primary Institutional Tones (Default Branding)
@@ -17,9 +17,9 @@ val SurfaceLight = Color(0xFFFFFFFF)    // Crisp Card Surface Light
 val BorderLight = Color(0xFFE2E8F0)     // Subtle Border Light
 
 // Dark Theme Variants
-val DarkBackground = Color(0xFF0F172A)  // Deep Midnight Background
-val DarkSurface = Color(0xFF1E293B)     // Surface Card Dark
-val DarkBorder = Color(0xFF334155)      // Dark Border
+val DarkBackground = Color(0xFF0B0F19)  // Deep Midnight Background
+val DarkSurface = Color(0xFF131C2E)     // Surface Card Dark
+val DarkBorder = Color(0xFF223049)      // Dark Border
 
 // Notice Sorter & Category Color Tokens
 val CanvasBackground = Color(0xFFF8FAFC)
@@ -52,11 +52,27 @@ val PaletteCream = Color(0xFFF3EFDF)
 val PaletteSageGreen = Color(0xFFBDCFAA)
 val PaletteMossGreen = Color(0xFF8E9E83)
 
+// Luxury Gradients ($1M Aesthetics)
 val PositivePrimaryGradient = Brush.horizontalGradient(
     colors = listOf(Color(0xFF4F46E5), Color(0xFF6366F1))
 )
 val ActionButtonGradient = Brush.horizontalGradient(
     colors = listOf(Color(0xFF4F46E5), Color(0xFF3B82F6))
+)
+val LuxuryHeroGradient = Brush.linearGradient(
+    colors = listOf(Color(0xFF0F172A), Color(0xFF1E1B4B), Color(0xFF312E81), Color(0xFF4338CA))
+)
+val GlowCardGradient = Brush.horizontalGradient(
+    colors = listOf(Color(0xFF4F46E5), Color(0xFF7C3AED))
+)
+val EmeraldGlowGradient = Brush.horizontalGradient(
+    colors = listOf(Color(0xFF059669), Color(0xFF10B981))
+)
+val AmberGoldGradient = Brush.horizontalGradient(
+    colors = listOf(Color(0xFFD97706), Color(0xFFF59E0B))
+)
+val VibrantPinkVioletGradient = Brush.horizontalGradient(
+    colors = listOf(Color(0xFFEC4899), Color(0xFF8B5CF6))
 )
 
 // Configurable College Brand Overlay Tokens
